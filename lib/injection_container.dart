@@ -9,6 +9,10 @@ import 'features/markup/data/repositories/markup_repository_impl.dart';
 import 'features/markup/domain/repositories/markup_repository.dart';
 import 'features/markup/domain/usecases/save_image_usecase.dart';
 import 'features/markup/presentation/cubit/markup_cubit.dart';
+import 'features/resize/data/datasources/resize_data_source.dart';
+import 'features/resize/data/repositories/resize_repository_impl.dart';
+import 'features/resize/domain/repositories/resize_repository.dart';
+import 'features/resize/presentation/cubit/resize_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -30,6 +34,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SaveImageUseCase(sl()));
   sl.registerLazySingleton<MarkupRepository>(() => MarkupRepositoryImpl(sl()));
   sl.registerLazySingleton<MarkupDataSource>(() => MarkupDataSourceImpl());
+
+  // Features - Resize
+  sl.registerFactory(() => ResizeCubit(sl()));
+  sl.registerLazySingleton<ResizeRepository>(() => ResizeRepositoryImpl(sl()));
+  sl.registerLazySingleton<ResizeDataSource>(() => ResizeDataSourceImpl());
 
   // Features - Capture
 

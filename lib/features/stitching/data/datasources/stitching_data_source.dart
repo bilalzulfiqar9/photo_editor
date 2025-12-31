@@ -12,7 +12,6 @@ class StitchingDataSourceImpl implements StitchingDataSource {
   Future<File> stitchImages(List<File> images) async {
     if (images.isEmpty) throw Exception("No images selected");
 
-    // 1. Decode all images
     List<img.Image> decodedImages = [];
     int maxWidth = 0;
     int totalHeight = 0;
@@ -29,16 +28,10 @@ class StitchingDataSourceImpl implements StitchingDataSource {
 
     if (decodedImages.isEmpty) throw Exception("Could not decode images");
 
-    // 2. Create a new blank image
     final mergedImage = img.Image(width: maxWidth, height: totalHeight);
 
-    // 3. Draw images onto the merged image
     int currentY = 0;
     for (var image in decodedImages) {
-      // Resize if width doesn't match (optional, but good for consistency)
-      // For now, let's just center or stretch?
-      // Simple strategy: Just draw securely. Best is to resize to maxWidth.
-
       img.Image imageToDraw = image;
       if (image.width != maxWidth) {
         imageToDraw = img.copyResize(image, width: maxWidth);
@@ -48,7 +41,6 @@ class StitchingDataSourceImpl implements StitchingDataSource {
       currentY += imageToDraw.height;
     }
 
-    // 4. Save to temporary file
     final tempDir = await getTemporaryDirectory();
     final fileName = "${const Uuid().v4()}.jpg";
     final targetFile = File("${tempDir.path}/$fileName");

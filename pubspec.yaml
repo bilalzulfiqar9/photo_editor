@@ -50,6 +50,8 @@ dependencies:
   webview_flutter: ^4.13.0
   device_info_plus: ^12.3.0
   pro_image_editor: ^11.15.2
+  flutter_image_compress: ^2.4.0
+  native_exif: ^0.6.2
 
 dev_dependencies:
   flutter_test:
