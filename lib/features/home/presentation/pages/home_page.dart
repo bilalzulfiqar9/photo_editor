@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:photo_editor/core/presentation/widgets/gradient_card.dart';
+import 'package:photo_editor/core/presentation/widgets/hero_feature_card.dart';
+import 'package:photo_editor/core/presentation/widgets/tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
+import 'package:photo_editor/features/crop/presentation/pages/crop_screen.dart';
 import 'package:photo_editor/features/markup/presentation/pages/markup_screen.dart';
-import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
+import 'package:photo_editor/features/overlay/presentation/pages/overlay_screen.dart';
 import 'package:photo_editor/features/resize/presentation/pages/resize_screen.dart';
+import 'package:photo_editor/features/settings/presentation/pages/settings_screen.dart';
+import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
+import 'package:photo_editor/features/watermark/presentation/pages/watermark_screen.dart';
+import 'package:photo_editor/features/gallery/presentation/pages/gallery_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,42 +18,69 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          'LongPic',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
+        title: const Text('Screen Stitch'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () {
-              // TODO: Open Settings
-            },
+          Container(
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.folder_open_outlined),
+              tooltip: 'My Work',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GalleryScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hero Section - Image Stitching
-            GradientCard(
+            const Text(
+              "Create",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const Gap(16),
+            HeroFeatureCard(
               title: 'Image Stitching',
-              subtitle: 'Tap to select images',
-              icon: Icons.layers_outlined, // Placeholder icon
-              gradientColors: const [
-                Color(0xFF8EC5FC),
-                Color(0xFFE0C3FC),
-              ], // Light Blue to Purple
-              height: 180,
+              subtitle: 'Join screenshots into one long masterpiece',
+              icon: Icons.layers, // You might want to use a specific asset here
+              gradientStart: const Color(0xFF9D44C0), // Purple from screenshot
+              gradientEnd: const Color(0xFF240046), // Darker purple
+              isPopular: true,
               onTap: () async {
                 if (await PermissionHelper.requestStoragePermission()) {
                   Navigator.push(
@@ -60,67 +92,57 @@ class HomePage extends StatelessWidget {
                 }
               },
             ),
-            const Gap(24),
-            Text(
-              'More Features',
-              style: GoogleFonts.poppins(
+            const Gap(32),
+            const Text(
+              "Tools",
+              style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
             ),
             const Gap(16),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 1.4,
+            Column(
               children: [
-                GradientCard(
-                  title: 'Watermarking',
+                ToolCard(
+                  title: 'Watermark',
+                  subtitle: 'Add branding',
                   icon: Icons.water_drop_outlined,
-                  gradientColors: const [
-                    Color(0xFF43E97B),
-                    Color(0xFF38F9D7),
-                  ], // Green
-                  isTry: true,
-                  expanded: true,
-                  onTap: () {
-                    // TODO: Nav to Watermarking
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Coming Soon: Watermarking"),
-                      ),
-                    );
+                  iconColor: const Color(0xFF3A86FF), // Blue
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WatermarkScreen(),
+                        ),
+                      );
+                    }
                   },
                 ),
-                GradientCard(
-                  title: 'Overlay',
-                  icon: Icons.layers,
-                  gradientColors: const [
-                    Color(0xFFA18CD1),
-                    Color(0xFFFBC2EB),
-                  ], // Purple
-                  isTry: true,
-                  expanded: true,
-                  onTap: () {
-                    // TODO: Nav to Overlay
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Coming Soon: Overlay")),
-                    );
+                const Gap(12),
+                ToolCard(
+                  title: 'Photo Blender',
+                  subtitle: 'Mix images',
+                  icon: Icons.blur_linear,
+                  iconColor: const Color(0xFF06D6A0), // Green for blender
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OverlayScreen(),
+                        ),
+                      );
+                    }
                   },
                 ),
-                GradientCard(
-                  title: 'Draw',
-                  icon: Icons.brush_outlined,
-                  gradientColors: const [
-                    Color(0xFFFF9A9E),
-                    Color(0xFFFECFEF),
-                  ], // Pink
-                  isTry: true,
-                  expanded: true,
+                const Gap(12),
+                ToolCard(
+                  title: 'Markup',
+                  subtitle: 'Draw & annotate',
+                  icon: Icons.edit_outlined,
+                  iconColor: const Color(0xFFFFBE0B), // Yellow/Orange
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       Navigator.push(
@@ -132,29 +154,29 @@ class HomePage extends StatelessWidget {
                     }
                   },
                 ),
-                GradientCard(
-                  title: 'Crop',
+                const Gap(12),
+                ToolCard(
+                  title: 'Crop & Rotate',
+                  subtitle: 'Adjust layout',
                   icon: Icons.crop,
-                  gradientColors: const [
-                    Color(0xFF4FACFE),
-                    Color(0xFF00F2FE),
-                  ], // Blue
-                  expanded: true,
-                  onTap: () {
-                    // TODO: Nav to Crop
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Coming Soon: Crop")),
-                    );
+                  iconColor: const Color(0xFFFF006E), // Pink
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CropScreen(),
+                        ),
+                      );
+                    }
                   },
                 ),
-                GradientCard(
-                  title: 'Resize and Convert',
-                  icon: Icons.compress,
-                  gradientColors: const [
-                    Color(0xFFF6D365),
-                    Color(0xFFFDA085),
-                  ], // Orange
-                  expanded: true,
+                const Gap(12),
+                ToolCard(
+                  title: 'Resize',
+                  subtitle: 'Change dimensions',
+                  icon: Icons.aspect_ratio,
+                  iconColor: const Color(0xFF8338EC), // Purple
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       Navigator.push(
@@ -166,6 +188,7 @@ class HomePage extends StatelessWidget {
                     }
                   },
                 ),
+                const Gap(30), // Bottom padding
               ],
             ),
           ],

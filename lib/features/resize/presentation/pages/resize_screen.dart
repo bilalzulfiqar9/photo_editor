@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:photo_editor/core/utils/permission_helper.dart';
+
 import 'package:photo_editor/features/resize/presentation/cubit/resize_cubit.dart';
 import 'package:photo_editor/features/resize/presentation/cubit/resize_state.dart';
 import 'package:photo_editor/injection_container.dart';
@@ -53,25 +52,11 @@ class _ResizeScreenState extends State<ResizeScreen> {
           }
 
           return Scaffold(
-            backgroundColor: Colors.white,
             appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: Text(
-                sizeInfo,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
+              title: Text(sizeInfo),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.compare, color: Colors.black),
+                  icon: const Icon(Icons.compare_arrows),
                   onPressed: () {
                     // TODO: implement hold-to-compare
                   },
@@ -82,9 +67,10 @@ class _ResizeScreenState extends State<ResizeScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : displayedImage == null
                 ? Center(
-                    child: TextButton(
+                    child: TextButton.icon(
                       onPressed: () => context.read<ResizeCubit>().pickImage(),
-                      child: const Text("Pick Image"),
+                      icon: const Icon(Icons.add_photo_alternate),
+                      label: const Text("Pick Image"),
                     ),
                   )
                 : SingleChildScrollView(
@@ -100,7 +86,7 @@ class _ResizeScreenState extends State<ResizeScreen> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withOpacity(0.3),
                                   blurRadius: 10,
                                 ),
                               ],
@@ -121,8 +107,6 @@ class _ResizeScreenState extends State<ResizeScreen> {
                               size: 16,
                             ),
                             label: const Text('Edit EXIF'),
-                            backgroundColor: const Color(0xFFFFE0E0),
-                            labelStyle: const TextStyle(color: Colors.black87),
                             onPressed: () {
                               // TODO: Show EXIF Dialog
                             },
@@ -131,13 +115,14 @@ class _ResizeScreenState extends State<ResizeScreen> {
                         const Gap(24),
 
                         // Presets
-                        Text(
+                        const Text(
                           'Presets',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                        const Gap(8),
+                        const Gap(12),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -146,7 +131,7 @@ class _ResizeScreenState extends State<ResizeScreen> {
                                   (p) => Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
                                     child: ChoiceChip(
-                                      label: Text('$p'),
+                                      label: Text('$p%'),
                                       selected: _quality == p,
                                       onSelected: (selected) {
                                         if (selected) {
@@ -172,8 +157,6 @@ class _ResizeScreenState extends State<ResizeScreen> {
                                 decoration: const InputDecoration(
                                   labelText: 'Width',
                                   border: OutlineInputBorder(),
-                                  filled: true,
-                                  fillColor: Color(0xFFF5F5F5),
                                 ),
                                 keyboardType: TextInputType.number,
                                 onChanged: (v) {
@@ -191,8 +174,6 @@ class _ResizeScreenState extends State<ResizeScreen> {
                                 decoration: const InputDecoration(
                                   labelText: 'Height',
                                   border: OutlineInputBorder(),
-                                  filled: true,
-                                  fillColor: Color(0xFFF5F5F5),
                                 ),
                                 keyboardType: TextInputType.number,
                                 onChanged: (v) {
@@ -212,10 +193,11 @@ class _ResizeScreenState extends State<ResizeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Quality',
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
                             Text('${_quality.round()}%'),
@@ -226,20 +208,20 @@ class _ResizeScreenState extends State<ResizeScreen> {
                           min: 1,
                           max: 100,
                           divisions: 100,
-                          activeColor: Colors.purple,
                           onChanged: (v) => setState(() => _quality = v),
                           onChangeEnd: (v) => _triggerCompress(context),
                         ),
                         const Gap(24),
 
                         // Image Format
-                        Text(
+                        const Text(
                           'Image Format',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                        const Gap(8),
+                        const Gap(12),
                         Wrap(
                           spacing: 8,
                           children: [
@@ -269,14 +251,13 @@ class _ResizeScreenState extends State<ResizeScreen> {
                     ),
                   ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                // The displayed image is already "saved" in temp dir,
-                // here we would verify/copy it to user gallery or show success
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text("Image Saved!")));
-              },
-              backgroundColor: Colors.purple,
+              onPressed: displayedImage == null
+                  ? null
+                  : () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Image Saved!")),
+                      );
+                    },
               child: const Icon(Icons.save),
             ),
           );
@@ -293,7 +274,6 @@ class _ResizeScreenState extends State<ResizeScreen> {
     return ChoiceChip(
       label: Text(label),
       selected: _selectedFormat == format,
-      selectedColor: Colors.purple.withOpacity(0.2),
       onSelected: (v) {
         if (v) {
           setState(() => _selectedFormat = format);
