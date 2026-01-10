@@ -1,35 +1,26 @@
 import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'package:gal/gal.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionHelper {
   static Future<bool> requestStoragePermission() async {
-    if (Platform.isAndroid) {
-      final deviceInfo = await DeviceInfoPlugin().androidInfo;
-      if (deviceInfo.version.sdkInt >= 33) {
-        // Android 13+
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.photos,
-          Permission.videos,
-          Permission.audio,
-        ].request();
-
-        // Grant if at least photos or videos are granted, as these are visual media
-        // (audio typically separate)
-        return statuses[Permission.photos]!.isGranted ||
-            statuses[Permission.videos]!.isGranted;
-      } else {
-        // Android 12 and below
-        var status = await Permission.storage.request();
-        return status.isGranted;
+    // Gal handles permissions for saving images effectively across platforms
+    // including Android 13+ scoped storage and iOS Photos add-only access.
+    try {
+      final hasAccess = await Gal.hasAccess();
+      if (!hasAccess) {
+        return await Gal.requestAccess();
       }
-    } else {
-      // iOS and others
-      var status = await Permission.photos.request();
-      if (status.isPermanentlyDenied) {
-        openAppSettings();
+      return true;
+    } catch (e) {
+      // Fallback for reading images if Gal doesn't cover read permissions
+      // or if we strictly need READ_MEDIA_IMAGES for picking.
+      if (Platform.isAndroid) {
+        // For picking images, we still might need standard permissions
+        if (await Permission.storage.request().isGranted) return true;
+        if (await Permission.photos.request().isGranted) return true;
       }
-      return status.isGranted || await Permission.storage.request().isGranted;
+      return false;
     }
   }
 }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:photo_editor/core/presentation/widgets/hero_feature_card.dart';
+import 'package:photo_editor/core/presentation/widgets/tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
-import 'package:photo_editor/features/home/presentation/widgets/feature_card.dart';
-import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
+import 'package:photo_editor/features/crop/presentation/pages/crop_screen.dart';
 import 'package:photo_editor/features/markup/presentation/pages/markup_screen.dart';
-import 'package:photo_editor/features/capture/presentation/pages/web_capture_screen.dart';
+import 'package:photo_editor/features/overlay/presentation/pages/overlay_screen.dart';
+import 'package:photo_editor/features/resize/presentation/pages/resize_screen.dart';
+import 'package:photo_editor/features/settings/presentation/pages/settings_screen.dart';
+import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
+import 'package:photo_editor/features/watermark/presentation/pages/watermark_screen.dart';
 import 'package:photo_editor/features/gallery/presentation/pages/gallery_screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,101 +18,172 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(20),
-              Text(
-                'Photo\nToolkit',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  height: 1.1,
-                ),
-              ),
-              const Gap(10),
-              Text(
-                'Create, Stitch & Edit like a Pro',
-                style: Theme.of(
+      appBar: AppBar(
+        title: const Text('Screen Stitch'),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.folder_open_outlined),
+              tooltip: 'My Work',
+              onPressed: () {
+                Navigator.push(
                   context,
-                ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
-              ),
-              const Gap(40),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.85,
-                  children: [
-                    FeatureCard(
-                      title: 'Stitch Photos',
-                      description: 'Merge screenshots vertically',
-                      icon: Icons.layers_outlined,
-                      color: const Color(0xFF6C63FF),
-                      onTap: () async {
-                        // Request permission first
-                        if (await PermissionHelper.requestStoragePermission()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const StitchScreen(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    FeatureCard(
-                      title: 'Photo Markup',
-                      description: 'Annotate & draw on images',
-                      icon: Icons.edit_outlined,
-                      color: const Color(0xFF03DAC6),
-                      onTap: () async {
-                        if (await PermissionHelper.requestStoragePermission()) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MarkupScreen(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    FeatureCard(
-                      title: 'Web Capture',
-                      description: 'Capture full websites',
-                      icon: Icons.camera_alt_outlined,
-                      color: const Color(0xFFFF4081),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const WebCaptureScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    FeatureCard(
-                      title: 'My Gallery',
-                      description: 'View your creations',
-                      icon: Icons.photo_library_outlined,
-                      color: const Color(0xFFFFB74D),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GalleryScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                  MaterialPageRoute(
+                    builder: (context) => const GalleryScreen(),
+                  ),
+                );
+              },
+            ),
           ),
+          Container(
+            margin: const EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Create",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const Gap(16),
+            HeroFeatureCard(
+              title: 'Image Stitching',
+              subtitle: 'Join screenshots into one long masterpiece',
+              icon: Icons.layers, // You might want to use a specific asset here
+              gradientStart: const Color(0xFF9D44C0), // Purple from screenshot
+              gradientEnd: const Color(0xFF240046), // Darker purple
+              isPopular: true,
+              onTap: () async {
+                if (await PermissionHelper.requestStoragePermission()) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StitchScreen(),
+                    ),
+                  );
+                }
+              },
+            ),
+            const Gap(32),
+            const Text(
+              "Tools",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const Gap(16),
+            Column(
+              children: [
+                ToolCard(
+                  title: 'Watermark',
+                  subtitle: 'Add branding',
+                  icon: Icons.water_drop_outlined,
+                  iconColor: const Color(0xFF3A86FF), // Blue
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WatermarkScreen(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Gap(12),
+                ToolCard(
+                  title: 'Photo Blender',
+                  subtitle: 'Mix images',
+                  icon: Icons.blur_linear,
+                  iconColor: const Color(0xFF06D6A0), // Green for blender
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OverlayScreen(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Gap(12),
+                ToolCard(
+                  title: 'Markup',
+                  subtitle: 'Draw & annotate',
+                  icon: Icons.edit_outlined,
+                  iconColor: const Color(0xFFFFBE0B), // Yellow/Orange
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MarkupScreen(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Gap(12),
+                ToolCard(
+                  title: 'Crop & Rotate',
+                  subtitle: 'Adjust layout',
+                  icon: Icons.crop,
+                  iconColor: const Color(0xFFFF006E), // Pink
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CropScreen(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Gap(12),
+                ToolCard(
+                  title: 'Resize',
+                  subtitle: 'Change dimensions',
+                  icon: Icons.aspect_ratio,
+                  iconColor: const Color(0xFF8338EC), // Purple
+                  onTap: () async {
+                    if (await PermissionHelper.requestStoragePermission()) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ResizeScreen(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Gap(30), // Bottom padding
+              ],
+            ),
+          ],
         ),
       ),
     );

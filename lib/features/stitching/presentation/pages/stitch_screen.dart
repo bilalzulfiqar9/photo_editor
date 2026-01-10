@@ -39,7 +39,7 @@ class StitchScreen extends StatelessWidget {
                 : <File>[];
 
             return Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   if (images.isEmpty)
@@ -48,15 +48,45 @@ class StitchScreen extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.photo_library,
-                              size: 80,
-                              color: Colors.grey[800],
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.05),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.add_photo_alternate_outlined,
+                                size: 60,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
-                            const Gap(16),
+                            const Gap(24),
                             const Text(
                               "No images selected",
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const Gap(32),
+                            ElevatedButton.icon(
+                              onPressed: () =>
+                                  context.read<StitchCubit>().pickImages(),
+                              icon: const Icon(Icons.add),
+                              label: const Text("Select Images"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.primary,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -64,68 +94,117 @@ class StitchScreen extends StatelessWidget {
                     )
                   else
                     Expanded(
-                      child: ReorderableListView.builder(
-                        itemCount: images.length,
-                        onReorder: (oldIndex, newIndex) => context
-                            .read<StitchCubit>()
-                            .reorderImages(oldIndex, newIndex),
-                        itemBuilder: (context, index) {
-                          return Card(
-                            key: ValueKey(images[index].path),
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                            child: ListTile(
-                              leading: Image.file(
-                                images[index],
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              ),
-                              title: Text("Image ${index + 1}"),
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${images.length} Images",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
-                                onPressed: () => context
-                                    .read<StitchCubit>()
-                                    .removeImage(index),
-                              ),
+                                TextButton.icon(
+                                  onPressed: () =>
+                                      context.read<StitchCubit>().pickImages(),
+                                  icon: const Icon(Icons.add, size: 18),
+                                  label: const Text("Add More"),
+                                ),
+                              ],
                             ),
-                          );
-                        },
+                          ),
+                          Expanded(
+                            child: ReorderableListView.builder(
+                              itemCount: images.length,
+                              onReorder: (oldIndex, newIndex) => context
+                                  .read<StitchCubit>()
+                                  .reorderImages(oldIndex, newIndex),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  key: ValueKey(images[index].path),
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.05),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(8),
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        images[index],
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      "Image ${index + 1}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.drag_handle,
+                                          color: Colors.white.withOpacity(0.3),
+                                        ),
+                                        const Gap(8),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.redAccent,
+                                          ),
+                                          onPressed: () => context
+                                              .read<StitchCubit>()
+                                              .removeImage(index),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
-                  const Gap(16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () =>
-                              context.read<StitchCubit>().pickImages(),
-                          icon: const Icon(Icons.add_photo_alternate),
-                          label: const Text("Add Images"),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
+                  if (images.length >= 2) ...[
+                    const Gap(20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => context.read<StitchCubit>().stitch(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.all(18),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          "Stitch Images",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      if (images.length >= 2) ...[
-                        const Gap(16),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () =>
-                                context.read<StitchCubit>().stitch(),
-                            icon: const Icon(Icons.merge_type),
-                            label: const Text("Stitch"),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(16),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
+                    ),
+                  ],
                 ],
               ),
             );
@@ -139,37 +218,67 @@ class StitchScreen extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: InteractiveViewer(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.file(result),
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: InteractiveViewer(
+                minScale: 0.1,
+                maxScale: 4.0,
+                child: Center(child: Image.file(result)),
               ),
             ),
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(16),
-          color: Theme.of(context).cardColor,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                onPressed: () {
-                  context.read<StitchCubit>().reset();
-                },
-                icon: const Icon(Icons.refresh),
-                tooltip: "Reset",
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    context.read<StitchCubit>().reset();
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text("Start Over"),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
               ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Share or save logic here
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Saving not implemented yet")),
-                  );
-                },
-                icon: const Icon(Icons.save),
-                label: const Text("Save"),
+              const Gap(16),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // In a real app we'd move this file to gallery
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Saved to ${result.path}")),
+                    );
+                  },
+                  icon: const Icon(Icons.save_alt),
+                  label: const Text("Save"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

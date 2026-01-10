@@ -9,10 +9,30 @@ import 'features/markup/data/repositories/markup_repository_impl.dart';
 import 'features/markup/domain/repositories/markup_repository.dart';
 import 'features/markup/domain/usecases/save_image_usecase.dart';
 import 'features/markup/presentation/cubit/markup_cubit.dart';
+import 'features/resize/data/datasources/resize_data_source.dart';
+import 'features/resize/data/repositories/resize_repository_impl.dart';
+import 'features/resize/domain/repositories/resize_repository.dart';
+import 'features/resize/presentation/cubit/resize_cubit.dart';
+import 'features/watermark/data/repositories/watermark_repository_impl.dart';
+import 'features/watermark/domain/repositories/watermark_repository.dart';
+import 'features/watermark/domain/usecases/save_watermark_usecase.dart';
+import 'features/watermark/presentation/cubit/watermark_cubit.dart';
+import 'features/crop/data/repositories/crop_repository_impl.dart';
+import 'features/crop/domain/repositories/crop_repository.dart';
+import 'features/crop/domain/usecases/save_crop_usecase.dart';
+import 'features/crop/presentation/cubit/crop_cubit.dart';
+import 'features/overlay/data/repositories/overlay_repository_impl.dart';
+import 'features/overlay/domain/repositories/overlay_repository.dart';
+import 'features/overlay/domain/usecases/save_overlay_usecase.dart';
+import 'features/overlay/presentation/cubit/overlay_cubit.dart';
+
+import 'package:photo_editor/core/theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // Core
+  sl.registerLazySingleton(() => ThemeCubit());
   // Features - Home
 
   // Features - Stitching
@@ -30,6 +50,28 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SaveImageUseCase(sl()));
   sl.registerLazySingleton<MarkupRepository>(() => MarkupRepositoryImpl(sl()));
   sl.registerLazySingleton<MarkupDataSource>(() => MarkupDataSourceImpl());
+
+  // Features - Resize
+  sl.registerFactory(() => ResizeCubit(sl()));
+  sl.registerLazySingleton<ResizeRepository>(() => ResizeRepositoryImpl(sl()));
+  sl.registerLazySingleton<ResizeDataSource>(() => ResizeDataSourceImpl());
+
+  // Features - Watermark
+  sl.registerFactory(() => WatermarkCubit(sl()));
+  sl.registerLazySingleton(() => SaveWatermarkUseCase(sl()));
+  sl.registerLazySingleton<WatermarkRepository>(
+    () => WatermarkRepositoryImpl(),
+  );
+
+  // Features - Crop
+  sl.registerFactory(() => CropCubit(sl()));
+  sl.registerLazySingleton(() => SaveCropUseCase(sl()));
+  sl.registerLazySingleton<CropRepository>(() => CropRepositoryImpl());
+
+  // Features - Overlay
+  sl.registerFactory(() => OverlayCubit(sl()));
+  sl.registerLazySingleton(() => SaveOverlayUseCase(sl()));
+  sl.registerLazySingleton<OverlayRepository>(() => OverlayRepositoryImpl());
 
   // Features - Capture
 
