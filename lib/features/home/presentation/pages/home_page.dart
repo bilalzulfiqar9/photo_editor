@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -67,11 +67,7 @@ class HomePage extends StatelessWidget {
           children: [
             const Text(
               "Create",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const Gap(16),
             HeroFeatureCard(
@@ -95,11 +91,7 @@ class HomePage extends StatelessWidget {
             const Gap(32),
             const Text(
               "Tools",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const Gap(16),
             Column(

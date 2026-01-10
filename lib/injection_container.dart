@@ -26,9 +26,13 @@ import 'features/overlay/domain/repositories/overlay_repository.dart';
 import 'features/overlay/domain/usecases/save_overlay_usecase.dart';
 import 'features/overlay/presentation/cubit/overlay_cubit.dart';
 
+import 'package:photo_editor/core/theme/theme_cubit.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // Core
+  sl.registerLazySingleton(() => ThemeCubit());
   // Features - Home
 
   // Features - Stitching

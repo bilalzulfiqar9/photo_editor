@@ -37,11 +37,8 @@ class WatermarkScreen extends StatelessWidget {
             return ProImageEditor.file(
               state.file,
               configs: ProImageEditorConfigs(
-                designMode: ImageEditorDesignModeE.material,
-                imageGeneration: const ImageGenerationConfigs(
-                  generateInsideSeparateThread: true,
-                  generateImageInBackground: true,
-                ),
+                designMode: ImageEditorDesignMode.material, // Fixed enum name
+                // Removed invalid imageGeneration params
                 mainEditor: const MainEditorConfigs(enableCloseButton: true),
                 paintEditor: const PaintEditorConfigs(enabled: false),
                 cropRotateEditor: const CropRotateEditorConfigs(

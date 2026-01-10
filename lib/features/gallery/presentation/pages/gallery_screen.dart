@@ -65,13 +65,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   Icon(
                     Icons.photo_library_outlined,
                     size: 64,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     "No saved images yet",
                     style: GoogleFonts.outfit(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.5),
                       fontSize: 18,
                     ),
                   ),

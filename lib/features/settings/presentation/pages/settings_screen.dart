@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_editor/core/theme/theme_cubit.dart';
 import 'package:photo_editor/features/pro/presentation/pages/pro_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -83,12 +85,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const Gap(32),
+
+          const Text(
+            "Appearance",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              // color: Colors.white, // Remove hardcoded white
+            ),
+          ),
+          const Gap(16),
+          BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              return SwitchListTile(
+                title: const Text("Dark Mode"),
+                value: themeMode == ThemeMode.dark,
+                onChanged: (isDark) {
+                  context.read<ThemeCubit>().toggleTheme(isDark);
+                },
+                secondary: Icon(
+                  themeMode == ThemeMode.dark
+                      ? Icons.dark_mode_outlined
+                      : Icons.light_mode_outlined,
+                ),
+              );
+            },
+          ),
+          const Gap(32),
           const Text(
             "General",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              // color: Colors.white,
             ),
           ),
           const Gap(16),
@@ -121,11 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Gap(32),
           const Text(
             "About",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Gap(16),
           _SettingTile(
@@ -147,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
               'Version $_version',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 fontSize: 14,
               ),
             ),
@@ -178,28 +203,34 @@ class _SettingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final contentColor = isDark ? Colors.white : Colors.black;
+    final containerColor = isDark
+        ? Colors.white.withOpacity(0.05)
+        : Colors.black.withOpacity(0.05);
+
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
+          color: containerColor,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, color: Colors.white, size: 20),
+        child: Icon(icon, color: contentColor, size: 20),
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: contentColor,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
-        color: Colors.white.withOpacity(0.3),
+        color: contentColor.withOpacity(0.3),
         size: 16,
       ),
     );
