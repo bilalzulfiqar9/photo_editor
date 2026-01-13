@@ -4,7 +4,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_editor/core/theme/theme_cubit.dart';
 import 'package:photo_editor/features/pro/presentation/pages/pro_screen.dart';
+import 'package:photo_editor/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -168,6 +170,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Gap(32),
+
+          _SettingTile(
+            icon: Icons.logout,
+            title: 'Log Out',
+            onTap: () {
+              context.read<AuthCubit>().signOut();
+              context.go('/login');
+            },
+          ),
+
+          const Gap(32),
+
           Center(
             child: Text(
               'Version $_version',
