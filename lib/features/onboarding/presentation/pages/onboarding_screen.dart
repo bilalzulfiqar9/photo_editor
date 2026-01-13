@@ -104,6 +104,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: TextButton(
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('onboarding_completed', true);
+                  if (context.mounted) {
+                    context.go('/'); // Go to Home
+                  }
+                },
+                child: Text(
+                  "Continue as Guest",
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -2,111 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color background = Color(0xFF121212);
-  static const Color surface = Color(0xFF1E1E1E);
-  static const Color primary = Color(0xFF7B2CBF);
-  static const Color onBackground = Colors.white;
-  static const Color onSurface = Colors.white;
-  static const Color onSurfaceVariant = Color(0xFFAAAAAA);
+  // Minimalist Color Palette - Light Focus
+  static const Color primary = Color(0xFF006F87);
+  static const Color accent = Color(0xFF3A86FF);
 
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: background,
-      colorScheme: const ColorScheme.dark(
-        primary: primary,
-        surface: surface,
-        onSurface: onSurface,
-      ),
-      textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme)
-          .copyWith(
-            displayLarge: GoogleFonts.outfit(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: onBackground,
-            ),
-            headlineMedium: GoogleFonts.outfit(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: onBackground,
-            ),
-            titleLarge: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: onBackground,
-            ),
-            titleMedium: GoogleFonts.outfit(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: onBackground,
-            ),
-            bodyMedium: GoogleFonts.outfit(
-              fontSize: 14,
-              color: onSurfaceVariant,
-            ),
-          ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: background,
-        elevation: 0,
-        centerTitle: false,
-        titleTextStyle: TextStyle(
-          fontFamily: 'Outfit',
-          fontSize: 28,
-          fontWeight: FontWeight.w700,
-          color: onBackground,
-        ),
-        iconTheme: IconThemeData(color: onBackground),
-      ),
-    );
-  }
+  static const Color backgroundLight = Color(0xFFF5F5F5); // Light Grey Shade
+  static const Color surfaceLight = Colors.white;
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      scaffoldBackgroundColor: backgroundLight,
       colorScheme: const ColorScheme.light(
         primary: primary,
-        surface: Colors.white,
+        secondary: accent,
+        surface: surfaceLight,
         onSurface: Colors.black,
-        secondary: Color(0xFF8338EC),
+        onPrimary: Colors.white,
       ),
-      textTheme: GoogleFonts.outfitTextTheme(ThemeData.light().textTheme)
-          .copyWith(
-            displayLarge: GoogleFonts.outfit(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            headlineMedium: GoogleFonts.outfit(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            titleLarge: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-            titleMedium: GoogleFonts.outfit(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
-            bodyMedium: GoogleFonts.outfit(fontSize: 14, color: Colors.black87),
-          ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
+      cardTheme: CardThemeData(
+        color: surfaceLight,
         elevation: 0,
-        centerTitle: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide.none, // Removed border for cleaner white look
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: backgroundLight,
+        elevation: 0,
+        centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
         titleTextStyle: TextStyle(
           fontFamily: 'Outfit',
-          fontSize: 28,
-          fontWeight: FontWeight.w700,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(
+        ThemeData.light().textTheme,
+      ).apply(bodyColor: Colors.black, displayColor: Colors.black),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        indicatorColor: Colors.black.withOpacity(0.1),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
     );
   }

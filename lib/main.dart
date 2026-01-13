@@ -5,7 +5,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:photo_editor/core/router/app_router.dart';
 import 'injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'core/theme/theme_cubit.dart';
+
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 
@@ -25,20 +25,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<ThemeCubit>()),
         BlocProvider(create: (_) => di.sl<AuthCubit>()..checkAuthStatus()),
       ],
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, themeMode) {
-          return MaterialApp.router(
-            title: 'Photo Editor & Stitcher',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeMode,
-            routerConfig: AppRouter.router,
-          );
-        },
+      child: MaterialApp.router(
+        title: 'Photo Editor & Stitcher',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        themeMode: ThemeMode.light,
+        routerConfig: AppRouter.router,
       ),
     );
   }

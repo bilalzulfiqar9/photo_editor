@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
-import 'package:go_router/go_router.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class ConversionToolsScreen extends StatelessWidget {
+  const ConversionToolsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,10 @@ class HomePage extends StatelessWidget {
                 bottom: 10,
               ),
               child: Text(
-                "Create & Edit",
+                "Your imagination, powered by Utility",
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -52,72 +52,63 @@ class HomePage extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              childAspectRatio: 1.4,
+              childAspectRatio: 1.4, // Matches HomePage compactness
               children: [
                 EvokeToolCard(
-                  title: 'Stitch',
-                  subtitle: 'Combine screens',
-                  icon: Icons.layers,
+                  title: 'PNG -> SVG',
+                  subtitle: 'Vectorize cleanly',
+                  icon: Icons.image,
                   iconColor: Theme.of(context).primaryColor,
                   isNew: true,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/stitch');
+                      context.push('/png-to-svg');
                     }
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Markup',
-                  subtitle: 'Draw & annotate',
-                  icon: Icons.edit_outlined,
+                  title: 'PNG -> PDF',
+                  subtitle: 'Extract frames',
+                  icon: Icons.picture_as_pdf,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/markup');
+                      context.push('/png-to-pdf');
                     }
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Watermark',
-                  subtitle: 'Add branding',
-                  icon: Icons.water_drop_outlined,
+                  title:
+                      "IMG's -> PDF", // Changed from IMG -> PDF to match screenshot
+                  subtitle: 'Make one file',
+                  icon: Icons.picture_as_pdf,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/watermark');
+                      context.push('/image-to-pdf');
                     }
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Blender',
-                  subtitle: 'Mix images',
-                  icon: Icons.blur_linear,
+                  title: 'PDF -> SIGN',
+                  subtitle: 'Make your Sign',
+                  icon: Icons.description,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/overlay');
+                      context.push('/pdf-sign');
                     }
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Crop',
-                  subtitle: 'Trim edges',
-                  icon: Icons.crop,
+                  title:
+                      'Image Compressor', // Changed from Compressor to match screenshot
+                  subtitle: 'Compress image',
+                  icon: Icons.compress,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/crop');
-                    }
-                  },
-                ),
-                EvokeToolCard(
-                  title: 'Resize',
-                  subtitle: 'New dimensions',
-                  icon: Icons.aspect_ratio,
-                  iconColor: Theme.of(context).primaryColor,
-                  onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/resize');
+                      context.push('/image-compress');
                     }
                   },
                 ),

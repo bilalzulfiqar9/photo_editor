@@ -43,13 +43,10 @@ import 'features/auth/data/repositories/auth_repository_impl.dart';
 
 import 'features/auth/data/datasources/firebase_auth_source.dart';
 
-import 'package:photo_editor/core/theme/theme_cubit.dart';
-
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(() => ThemeCubit());
 
   // Features - Auth
   final firebaseAuth = FirebaseAuth.instance;

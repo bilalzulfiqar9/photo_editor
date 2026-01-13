@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -262,14 +263,26 @@ class StitchScreen extends StatelessWidget {
               const Gap(16),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    // In a real app we'd move this file to gallery
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Saved to ${result.path}")),
+                  onPressed: () async {
+                    final success = await GallerySaverHelper.saveImage(
+                      result.path,
                     );
+                    if (context.mounted) {
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Saved to Gallery")),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Failed to save to Gallery"),
+                          ),
+                        );
+                      }
+                    }
                   },
                   icon: const Icon(Icons.save_alt),
-                  label: const Text("Save"),
+                  label: const Text("Save to Gallery"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
