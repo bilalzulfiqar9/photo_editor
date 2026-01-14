@@ -9,13 +9,16 @@ class ProScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image or Gradient
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF240046), Color(0xFF10002B)],
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).primaryColor.withAlpha(200),
+                  Theme.of(context).primaryColor,
+                ],
               ),
             ),
           ),
