@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -56,6 +57,7 @@ class _PngToPdfScreenState extends State<PngToPdfScreen> {
 
       if (mounted) {
         setState(() => _isGenerating = false);
+        GallerySaverHelper.shouldReloadGallery.value++;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('PDF Saved to Gallery!'),

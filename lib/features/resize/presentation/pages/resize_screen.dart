@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:photo_editor/features/resize/presentation/cubit/resize_cubit.dart';
 import 'package:photo_editor/features/resize/presentation/cubit/resize_state.dart';
 import 'package:photo_editor/injection_container.dart';
+import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
 
 class ResizeScreen extends StatefulWidget {
   const ResizeScreen({super.key});
@@ -253,10 +254,21 @@ class _ResizeScreenState extends State<ResizeScreen> {
             floatingActionButton: FloatingActionButton(
               onPressed: displayedImage == null
                   ? null
-                  : () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Image Saved!")),
+                  : () async {
+                      final success = await GallerySaverHelper.saveImage(
+                        displayedImage!.path,
                       );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              success
+                                  ? "Saved to Gallery & App"
+                                  : "Failed to save",
+                            ),
+                          ),
+                        );
+                      }
                     },
               child: const Icon(Icons.save),
             ),

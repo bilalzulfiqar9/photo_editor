@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -57,6 +58,7 @@ class _PngToSvgScreenState extends State<PngToSvgScreen> {
 
       if (mounted) {
         setState(() => _isGenerating = false);
+        GallerySaverHelper.shouldReloadGallery.value++;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('SVG Saved to Gallery!'),

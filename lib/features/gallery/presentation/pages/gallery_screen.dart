@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -19,6 +20,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
   void initState() {
     super.initState();
     _loadImages();
+    GallerySaverHelper.shouldReloadGallery.addListener(_loadImages);
+  }
+
+  @override
+  void dispose() {
+    GallerySaverHelper.shouldReloadGallery.removeListener(_loadImages);
+    super.dispose();
   }
 
   Future<void> _loadImages() async {
@@ -56,7 +64,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade400,
+      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
       appBar: AppBar(
         title: const Text(
           'My Work',
@@ -66,10 +74,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
             fontSize: 20,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
         actions: [],
       ),
       body: _loading
@@ -125,8 +129,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         ),
                       );
                     } else {
-                      // For PDF/SVG, just share for now as we don't have a viewer
-                      // Or maybe show a detail dialog
                       _showFileDetails(context, file);
                     }
                   },
