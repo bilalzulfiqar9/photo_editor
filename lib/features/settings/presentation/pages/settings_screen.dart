@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:photo_editor/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-           GestureDetector(
+          GestureDetector(
             onTap: () {
               context.push('/pro');
             },
@@ -158,15 +156,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Gap(32),
-
-          _SettingTile(
-            icon: Icons.logout,
-            title: 'Log Out',
-            onTap: () {
-              context.read<AuthCubit>().signOut();
-              context.go('/login');
-            },
-          ),
 
           const Gap(32),
 

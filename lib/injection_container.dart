@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:photo_editor/features/stitching/domain/repositories/stitching_repository.dart';
 import 'features/stitching/presentation/cubit/stitch_cubit.dart';
 import 'features/stitching/domain/usecases/stitch_images_usecase.dart';
@@ -31,47 +31,10 @@ import 'features/payment/data/repositories/payment_repository_impl.dart';
 import 'features/payment/domain/repositories/payment_repository.dart';
 import 'features/payment/presentation/cubit/payment_cubit.dart';
 
-import 'features/auth/presentation/cubit/auth_cubit.dart';
-import 'features/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/domain/usecases/sign_in_usecase.dart';
-import 'features/auth/domain/usecases/sign_up_usecase.dart';
-import 'features/auth/domain/usecases/sign_out_usecase.dart';
-import 'features/auth/domain/usecases/reset_password_usecase.dart';
-import 'features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
-import 'features/auth/data/repositories/auth_repository_impl.dart';
-
-import 'features/auth/data/datasources/firebase_auth_source.dart';
-
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-
-  // Features - Auth
-  final firebaseAuth = FirebaseAuth.instance;
-  sl.registerLazySingleton(() => firebaseAuth);
-
-  sl.registerFactory(
-    () => AuthCubit(
-      signInUseCase: sl(),
-      signUpUseCase: sl(),
-      signOutUseCase: sl(),
-      resetPasswordUseCase: sl(),
-      getCurrentUserUseCase: sl(),
-      signInAnonymouslyUseCase: sl(),
-    ),
-  );
-  sl.registerLazySingleton<FirebaseAuthDataSource>(
-    () => FirebaseAuthDataSourceImpl(sl()),
-  );
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
-  sl.registerLazySingleton(() => SignInUseCase(sl()));
-  sl.registerLazySingleton(() => SignUpUseCase(sl()));
-  sl.registerLazySingleton(() => SignOutUseCase(sl()));
-  sl.registerLazySingleton(() => ResetPasswordUseCase(sl()));
-  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
-  sl.registerLazySingleton(() => SignInAnonymouslyUseCase(sl()));
 
   // Features - Payment
   sl.registerFactory(() => PaymentCubit(sl()));
