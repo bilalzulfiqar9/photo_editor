@@ -11,6 +11,7 @@ import 'package:photo_editor/features/settings/presentation/pages/settings_scree
 import 'package:photo_editor/features/pdf_tools/presentation/pages/image_to_pdf_screen.dart';
 import 'package:photo_editor/features/compression/presentation/pages/image_compress_screen.dart';
 import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
+import 'package:photo_editor/features/studio/presentation/pages/studio_screen.dart';
 import 'package:photo_editor/features/markup/presentation/pages/markup_screen.dart';
 import 'package:photo_editor/features/watermark/presentation/pages/watermark_screen.dart';
 import 'package:photo_editor/features/overlay/presentation/pages/overlay_screen.dart';
@@ -19,6 +20,7 @@ import 'package:photo_editor/features/resize/presentation/pages/resize_screen.da
 import 'package:photo_editor/features/converter/presentation/pages/png_to_svg_screen.dart';
 import 'package:photo_editor/features/pdf_tools/presentation/pages/png_to_pdf_screen.dart';
 import 'package:photo_editor/features/pdf_tools/presentation/pages/pdf_sign_screen.dart';
+import 'package:photo_editor/features/capture/presentation/pages/web_capture_screen.dart';
 import 'package:photo_editor/features/pro/presentation/pages/pro_screen.dart';
 
 class AppRouter {
@@ -100,6 +102,11 @@ class AppRouter {
         builder: (context, state) => const WatermarkScreen(),
       ),
       GoRoute(
+        path: '/studio',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const StudioScreen(),
+      ),
+      GoRoute(
         path: '/overlay',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const OverlayScreen(),
@@ -128,6 +135,11 @@ class AppRouter {
         path: '/pdf-sign',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const PdfSignScreen(),
+      ),
+      GoRoute(
+        path: '/web-capture',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const WebCaptureScreen(),
       ),
       GoRoute(
         path: '/pro',

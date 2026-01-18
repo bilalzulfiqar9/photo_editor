@@ -5,6 +5,7 @@ import 'features/stitching/presentation/cubit/stitch_cubit.dart';
 import 'features/stitching/domain/usecases/stitch_images_usecase.dart';
 import 'features/stitching/data/repositories/stitching_repository_impl.dart';
 import 'features/stitching/data/datasources/stitching_data_source.dart';
+import 'features/studio/presentation/cubit/studio_cubit.dart';
 import 'features/markup/data/datasources/markup_data_source.dart';
 import 'features/markup/data/repositories/markup_repository_impl.dart';
 import 'features/markup/domain/repositories/markup_repository.dart';
@@ -76,6 +77,12 @@ Future<void> init() async {
   sl.registerLazySingleton<WatermarkRepository>(
     () => WatermarkRepositoryImpl(),
   );
+
+  // Features - Studio
+  sl.registerFactory(() => StudioCubit());
+
+  // Features - Web Capture
+  // No DI needed for now as it's stateful widget, but good to have placeholder if we grow it.
 
   // Features - Crop
   sl.registerFactory(() => CropCubit(sl()));

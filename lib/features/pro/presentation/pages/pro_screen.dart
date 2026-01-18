@@ -122,12 +122,32 @@ class _ProScreenState extends State<ProScreen> {
                             // Assuming we pre-load products even for Pro Screen or load them in initState
                             // Ideally ProScreen should also trigger loadProducts or rely on cached products
                             if (state is PaymentProductsLoaded) {
+                              if (state.products.isEmpty) {
+                                return Column(
+                                  children: [
+                                    const Text(
+                                      "No products found",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    const Gap(8),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        context
+                                            .read<PaymentCubit>()
+                                            .loadProducts();
+                                      },
+                                      child: const Text('Retry'),
+                                    ),
+                                  ],
+                                );
+                              }
+
                               // Find yearly subscription or fallback
+                              // Using cast to avoid type issues if generic inference is weird
+                              // But explicit check above ensures we have products.
                               final product = state.products.firstWhere(
                                 (p) => p.id == 'subscription_yearly',
-                                orElse: () => state.products.isNotEmpty
-                                    ? state.products.first
-                                    : throw Exception("No products found"),
+                                orElse: () => state.products.first,
                               );
 
                               return ElevatedButton(

@@ -67,47 +67,23 @@ class HomePage extends StatelessWidget {
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Markup',
-                  subtitle: 'Draw & annotate',
-                  icon: Icons.edit_outlined,
+                  title: 'Photo Studio',
+                  subtitle: 'Edit, Markup, Crop',
+                  icon: Icons.brush_outlined,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/markup');
+                      context.push('/studio');
                     }
                   },
                 ),
                 EvokeToolCard(
-                  title: 'Watermark',
-                  subtitle: 'Add branding',
-                  icon: Icons.water_drop_outlined,
+                  title: 'Web Capture',
+                  subtitle: 'Website to Image',
+                  icon: Icons.web_asset,
                   iconColor: Theme.of(context).primaryColor,
                   onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/watermark');
-                    }
-                  },
-                ),
-                EvokeToolCard(
-                  title: 'Blender',
-                  subtitle: 'Mix images',
-                  icon: Icons.blur_linear,
-                  iconColor: Theme.of(context).primaryColor,
-                  onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/overlay');
-                    }
-                  },
-                ),
-                EvokeToolCard(
-                  title: 'Crop',
-                  subtitle: 'Trim edges',
-                  icon: Icons.crop,
-                  iconColor: Theme.of(context).primaryColor,
-                  onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      context.push('/crop');
-                    }
+                    context.push('/web-capture');
                   },
                 ),
                 EvokeToolCard(
