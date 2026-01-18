@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/payment/presentation/cubit/payment_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => di.sl<AuthCubit>()..checkAuthStatus()),
+        BlocProvider(create: (_) => di.sl<PaymentCubit>()),
       ],
       child: MaterialApp.router(
         title: 'Photo Editor & Stitcher',

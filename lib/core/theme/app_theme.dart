@@ -26,7 +26,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide.none, // Removed border for cleaner white look
+          side: BorderSide.none, 
         ),
       ),
       appBarTheme: const AppBarTheme(

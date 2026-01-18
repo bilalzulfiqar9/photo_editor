@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,47 +15,32 @@ class StripeService {
       print('StripeService: User not logged in');
       throw Exception('User not logged in');
     }
-    print(
-      'StripeService: Creating checkout session for user ${user.uid} with price $priceId',
-    );
 
-    final docRef = await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(user.uid)
-        .collection('checkout_sessions')
-        .add({
-          'price': priceId,
-          'mode': 'subscription',
-          'success_url':
-              'https://success.com', // Replace with app link scheme if needed
-          'cancel_url': 'https://cancel.com',
-        });
+    try {
+      print('StripeService: Calling createStripeCheckoutSession...');
+      final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
+        'createStripeCheckoutSession',
+      );
 
-    print(
-      'StripeService: Document added with ID: ${docRef.id}. Waiting for URL...',
-    );
+      final result = await callable.call(<String, dynamic>{
+        'priceId': priceId,
+        'successUrl': 'https://success.com', // Update with deep link if needed
+        'cancelUrl': 'https://cancel.com',
+      });
 
-    docRef.snapshots().listen((ds) async {
-      if (ds.exists) {
-        // Wait for usage of 'sessionId' or 'url'
-        final data = ds.data();
-        if (data != null) {
-          if (data.containsKey('url')) {
-            final url = data['url'] as String;
-            print('StripeService: URL received: $url');
-            if (await canLaunchUrl(Uri.parse(url))) {
-              await launchUrl(Uri.parse(url));
-            } else {
-              print('StripeService: Could not launch URL: $url');
-            }
-          } else if (data.containsKey('error')) {
-            print(
-              'StripeService: Error from extension: ${data['error']['message']}',
-            );
-            throw Exception(data['error']['message']);
-          }
-        }
+      final data = result.data as Map<dynamic, dynamic>;
+      final url = data['url'] as String;
+
+      print('StripeService: URL received: $url');
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      } else {
+        print('StripeService: Could not launch URL: $url');
+        throw Exception('Could not launch payment URL');
       }
-    });
+    } catch (e) {
+      print('StripeService: Error: $e');
+      throw Exception('Payment init failed: ${e.toString()}');
+    }
   }
 }

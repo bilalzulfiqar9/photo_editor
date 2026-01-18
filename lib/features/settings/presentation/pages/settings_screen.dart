@@ -52,8 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // Pro Banner
-          GestureDetector(
+           GestureDetector(
             onTap: () {
               context.push('/pro');
             },

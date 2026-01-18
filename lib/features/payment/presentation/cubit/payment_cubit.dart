@@ -2,8 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/repositories/payment_repository.dart';
 
-// States
-abstract class PaymentState extends Equatable {
+ abstract class PaymentState extends Equatable {
   const PaymentState();
   @override
   List<Object> get props => [];
@@ -22,8 +21,7 @@ class PaymentFailure extends PaymentState {
   List<Object> get props => [message];
 }
 
-// Cubit
-class PaymentCubit extends Cubit<PaymentState> {
+ class PaymentCubit extends Cubit<PaymentState> {
   final PaymentRepository repository;
 
   PaymentCubit(this.repository) : super(PaymentInitial());

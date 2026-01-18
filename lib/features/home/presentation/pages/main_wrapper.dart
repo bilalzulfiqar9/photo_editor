@@ -23,6 +23,7 @@ class MainWrapper extends StatelessWidget {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
+
             selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
