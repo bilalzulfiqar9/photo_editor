@@ -23,8 +23,8 @@ class _ResizeScreenState extends State<ResizeScreen> {
   int _height = 1080;
   CompressFormat _selectedFormat = CompressFormat.jpeg;
 
-  TextEditingController _widthController = TextEditingController();
-  TextEditingController _heightController = TextEditingController();
+  final TextEditingController _widthController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
   final Debouncer _debouncer = Debouncer(milliseconds: 500);
   bool _initializedFromImage = false;
 

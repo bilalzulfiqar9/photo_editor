@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                   title: 'Stitch',
                   subtitle: 'Combine screens',
                   icon: Icons.layers,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [Color(0xFF9681EB), Color(0xFF7A67F5)],
                   isNew: true,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                   title: 'Photo Studio',
                   subtitle: 'Edit, Markup, Crop',
                   icon: Icons.brush_outlined,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [Color(0xFF00E676), Color(0xFF1DE9B6)],
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/studio');
@@ -80,8 +80,11 @@ class HomePage extends StatelessWidget {
                 EvokeToolCard(
                   title: 'Web Capture',
                   subtitle: 'Website to Image',
-                  icon: Icons.web_asset,
-                  iconColor: Theme.of(context).primaryColor,
+                  icon: Icons.public, // Changed icon to public/globe
+                  gradient: const [
+                    Color(0xFF2193b0),
+                    Color(0xFF6dd5ed),
+                  ], // Blue/Cyan
                   onTap: () async {
                     context.push('/web-capture');
                   },
@@ -90,7 +93,10 @@ class HomePage extends StatelessWidget {
                   title: 'Resize',
                   subtitle: 'New dimensions',
                   icon: Icons.aspect_ratio,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFFFFA000),
+                    Color(0xFFFFC107),
+                  ], // Orange/Yellow
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/resize');

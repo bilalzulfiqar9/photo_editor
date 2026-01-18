@@ -58,7 +58,10 @@ class ConversionToolsScreen extends StatelessWidget {
                   title: 'PNG -> SVG',
                   subtitle: 'Vectorize cleanly',
                   icon: Icons.image,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFF6A11CB),
+                    Color(0xFF2575FC),
+                  ], // Purple/Blue
                   isNew: true,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
@@ -70,7 +73,10 @@ class ConversionToolsScreen extends StatelessWidget {
                   title: 'PNG -> PDF',
                   subtitle: 'Extract frames',
                   icon: Icons.picture_as_pdf,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFFFF416C),
+                    Color(0xFFFF4B2B),
+                  ], // Red/Pink
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/png-to-pdf');
@@ -78,11 +84,13 @@ class ConversionToolsScreen extends StatelessWidget {
                   },
                 ),
                 EvokeToolCard(
-                  title:
-                      "IMG's -> PDF", // Changed from IMG -> PDF to match screenshot
+                  title: "IMG's -> PDF",
                   subtitle: 'Make one file',
                   icon: Icons.picture_as_pdf,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFF11998e),
+                    Color(0xFF38ef7d),
+                  ], // Green
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/image-to-pdf');
@@ -93,7 +101,10 @@ class ConversionToolsScreen extends StatelessWidget {
                   title: 'PDF -> SIGN',
                   subtitle: 'Make your Sign',
                   icon: Icons.description,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFF2193b0),
+                    Color(0xFF6dd5ed),
+                  ], // Blue/Cyan
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/pdf-sign');
@@ -101,11 +112,13 @@ class ConversionToolsScreen extends StatelessWidget {
                   },
                 ),
                 EvokeToolCard(
-                  title:
-                      'Image Compressor', // Changed from Compressor to match screenshot
+                  title: 'Image Compressor',
                   subtitle: 'Compress image',
                   icon: Icons.compress,
-                  iconColor: Theme.of(context).primaryColor,
+                  gradient: const [
+                    Color(0xFFF7971E),
+                    Color(0xFFFFD200),
+                  ], // Orange/Yellow
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/image-compress');

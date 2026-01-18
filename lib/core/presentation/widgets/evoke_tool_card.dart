@@ -8,6 +8,7 @@ class EvokeToolCard extends StatelessWidget {
   final Color iconColor;
   final VoidCallback onTap;
   final bool isNew;
+  final List<Color>? gradient;
 
   const EvokeToolCard({
     super.key,
@@ -17,23 +18,54 @@ class EvokeToolCard extends StatelessWidget {
     this.iconColor = const Color(0xFF3A86FF),
     required this.onTap,
     this.isNew = false,
+    this.gradient,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determine text and icon colors based on whether a gradient is present
+    final isGradient = gradient != null;
+    final textColor = isGradient ? Colors.white : Colors.black87;
+    final subTextColor = isGradient
+        ? Colors.white.withOpacity(0.9)
+        : Colors.black54; // Assuming standard subtext color
+    final iconBgColor = isGradient
+        ? Colors.white.withOpacity(0.2)
+        : Colors.white;
+    final effectiveIconColor = isGradient ? Colors.white : iconColor;
+    final borderColor = isGradient
+        ? Colors.transparent
+        : Theme.of(context).primaryColor;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color: isGradient ? null : Colors.white,
+        gradient: isGradient
+            ? LinearGradient(
+                colors: gradient!,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        borderRadius: BorderRadius.circular(16), // Slightly more rounded
+        boxShadow: [
+          BoxShadow(
+            color: (isGradient ? gradient!.first : Colors.grey).withOpacity(
+              0.2,
+            ),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(16), // Increased padding
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,15 +76,15 @@ class EvokeToolCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: title.contains('->')
-                          ? _buildArrowTitle(context)
+                          ? _buildArrowTitle(context, textColor)
                           : Text(
                               title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: textColor,
                               ),
                             ),
                     ),
@@ -64,15 +96,17 @@ class EvokeToolCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.purple.withOpacity(0.1),
+                          color: isGradient
+                              ? Colors.white
+                              : Colors.purple.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Text(
+                        child: Text(
                           "New",
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            color: Colors.purple,
+                            color: isGradient ? gradient!.first : Colors.purple,
                           ),
                         ),
                       ),
@@ -82,19 +116,15 @@ class EvokeToolCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Theme.of(context).primaryColor,
-                        ),
+                        color: iconBgColor,
+                        borderRadius: BorderRadius.circular(12),
+                        border: isGradient
+                            ? null
+                            : Border.all(color: borderColor),
                       ),
-                      child: Icon(
-                        icon,
-                        color: Theme.of(context).primaryColor,
-                        size: 20,
-                      ),
+                      child: Icon(icon, color: effectiveIconColor, size: 24),
                     ),
                     const Gap(12),
                     Expanded(
@@ -104,6 +134,7 @@ class EvokeToolCard extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           height: 1.2,
+                          color: subTextColor,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -119,15 +150,15 @@ class EvokeToolCard extends StatelessWidget {
     );
   }
 
-  Widget _buildArrowTitle(BuildContext context) {
+  Widget _buildArrowTitle(BuildContext context, Color color) {
     return Text(
       title,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-        fontSize: 18, // Matching main title size
+      style: TextStyle(
+        fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.black87,
+        color: color,
         letterSpacing: -0.5,
       ),
     );
