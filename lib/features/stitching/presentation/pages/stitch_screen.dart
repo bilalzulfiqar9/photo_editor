@@ -52,20 +52,22 @@ class StitchScreen extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(24),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.05),
+                                color: Theme.of(
+                                  context,
+                                ).primaryColor.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.add_photo_alternate_outlined,
                                 size: 60,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                             const Gap(24),
                             const Text(
                               "No images selected",
                               style: TextStyle(
-                                color: Colors.white54,
+                                color: Colors.grey,
                                 fontSize: 18,
                               ),
                             ),
@@ -105,7 +107,7 @@ class StitchScreen extends StatelessWidget {
                                 Text(
                                   "${images.length} Images",
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -132,8 +134,15 @@ class StitchScreen extends StatelessWidget {
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(8),
@@ -149,7 +158,7 @@ class StitchScreen extends StatelessWidget {
                                     title: Text(
                                       "Image ${index + 1}",
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     ),
                                     trailing: Row(
@@ -157,7 +166,7 @@ class StitchScreen extends StatelessWidget {
                                       children: [
                                         Icon(
                                           Icons.drag_handle,
-                                          color: Colors.white.withOpacity(0.3),
+                                          color: Colors.grey,
                                         ),
                                         const Gap(8),
                                         IconButton(
@@ -253,7 +262,7 @@ class StitchScreen extends StatelessWidget {
                   label: const Text("Start Over"),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    side: BorderSide(color: Colors.grey.withOpacity(0.3)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
