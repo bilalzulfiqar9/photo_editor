@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:photo_editor/core/router/app_router.dart';
 import 'injection_container.dart' as di;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +11,6 @@ import 'features/payment/presentation/cubit/payment_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Stripe.publishableKey = "pk_test_your_key";
   await di.init();
   runApp(const MyApp());
 }
