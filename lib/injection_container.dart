@@ -26,7 +26,7 @@ import 'features/overlay/data/repositories/overlay_repository_impl.dart';
 import 'features/overlay/domain/repositories/overlay_repository.dart';
 import 'features/overlay/domain/usecases/save_overlay_usecase.dart';
 import 'features/overlay/presentation/cubit/overlay_cubit.dart';
-import 'features/payment/data/datasources/stripe_service.dart';
+import 'features/payment/data/datasources/iap_service.dart';
 import 'features/payment/data/repositories/payment_repository_impl.dart';
 import 'features/payment/domain/repositories/payment_repository.dart';
 import 'features/payment/presentation/cubit/payment_cubit.dart';
@@ -41,7 +41,12 @@ Future<void> init() async {
   sl.registerLazySingleton<PaymentRepository>(
     () => PaymentRepositoryImpl(sl()),
   );
-  sl.registerLazySingleton(() => StripeService());
+  sl.registerLazySingleton(
+    () => IAPService(
+      onPurchaseSuccess: (purchaseDetails) {},
+      onPurchaseError: (error) {},
+    ),
+  );
 
   // Features - Stitching
 

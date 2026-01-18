@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import '../cubit/payment_cubit.dart';
 
-class SubscriptionScreen extends StatelessWidget {
+class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
+
+  @override
+  State<SubscriptionScreen> createState() => _SubscriptionScreenState();
+}
+
+class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PaymentCubit>().loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,49 +37,58 @@ class SubscriptionScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is PaymentLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is PaymentProductsLoaded) {
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                ...state.products.map(
+                  (product) => _buildPlanCard(context, product),
+                ),
+                const Gap(32),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<PaymentCubit>().restorePurchases();
+                    },
+                    child: const Text("Restore Purchases"),
+                  ),
+                ),
+              ],
+            );
           }
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              _buildPlanCard(
-                context,
-                'Monthly',
-                '\$4.99/mo',
-                'price_monthly_id',
-              ),
-              const Gap(16),
-              _buildPlanCard(
-                context,
-                'Yearly',
-                '\$39.99/yr',
-                'price_yearly_id',
-              ),
-              const Gap(16),
-              _buildPlanCard(
-                context,
-                'Lifetime',
-                '\$99.99',
-                'price_lifetime_id',
-              ),
-            ],
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("No products available"),
+                TextButton(
+                  onPressed: () {
+                    context.read<PaymentCubit>().loadProducts();
+                  },
+                  child: const Text("Retry"),
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildPlanCard(
-    BuildContext context,
-    String title,
-    String price,
-    String planId,
-  ) {
+  Widget _buildPlanCard(BuildContext context, ProductDetails product) {
     return Card(
       child: ListTile(
-        title: Text(title, style: Theme.of(context).textTheme.titleLarge),
-        trailing: Text(price, style: Theme.of(context).textTheme.headlineSmall),
+        title: Text(
+          product.title,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        subtitle: Text(product.description),
+        trailing: Text(
+          product.price,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         onTap: () {
-          context.read<PaymentCubit>().subscribeToPlan(planId);
+          context.read<PaymentCubit>().subscribeToPlan(product);
         },
       ),
     );

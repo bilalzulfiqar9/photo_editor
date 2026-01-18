@@ -3,8 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../payment/presentation/cubit/payment_cubit.dart';
 import 'package:gap/gap.dart';
 
-class ProScreen extends StatelessWidget {
+class ProScreen extends StatefulWidget {
   const ProScreen({super.key});
+
+  @override
+  State<ProScreen> createState() => _ProScreenState();
+}
+
+class _ProScreenState extends State<ProScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PaymentCubit>().loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,28 +119,51 @@ class ProScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            // Assuming we pre-load products even for Pro Screen or load them in initState
+                            // Ideally ProScreen should also trigger loadProducts or rely on cached products
+                            if (state is PaymentProductsLoaded) {
+                              // Find yearly subscription or fallback
+                              final product = state.products.firstWhere(
+                                (p) => p.id == 'subscription_yearly',
+                                orElse: () => state.products.isNotEmpty
+                                    ? state.products.first
+                                    : throw Exception("No products found"),
+                              );
+
+                              return ElevatedButton(
+                                onPressed: () {
+                                  context.read<PaymentCubit>().subscribeToPlan(
+                                    product,
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFFF006E),
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(double.infinity, 56),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: Text(
+                                  'Subscribe for ${product.price}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
+
                             return ElevatedButton(
                               onPressed: () {
-                                context.read<PaymentCubit>().subscribeToPlan(
-                                  'price_1Qj2jPJoOrM48Mg1y0l0x',
-                                ); // Replace with real ID
+                                context.read<PaymentCubit>().loadProducts();
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFFF006E),
-                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.white24,
                                 minimumSize: const Size(double.infinity, 56),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 0,
                               ),
-                              child: const Text(
-                                'Subscribe for \$4.99/year',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: const Text('Load Products'),
                             );
                           },
                         ),

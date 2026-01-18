@@ -66,6 +66,7 @@ dependencies:
   # PDF
   pdf: ^3.10.4
   printing: ^5.11.0
+  in_app_purchase: ^3.2.3
 
 
 dev_dependencies:
