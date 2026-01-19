@@ -104,77 +104,80 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 ],
               ),
             )
-          : GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: _images.length,
-              itemBuilder: (context, index) {
-                final file = _images[index];
-                final path = file.path.toLowerCase();
-                final isPdf = path.endsWith('.pdf');
-                final isSvg = path.endsWith('.svg');
-                final isImage = !isPdf && !isSvg;
+          : RefreshIndicator(
+              onRefresh: _loadImages,
+              child: GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.8,
+                ),
+                itemCount: _images.length,
+                itemBuilder: (context, index) {
+                  final file = _images[index];
+                  final path = file.path.toLowerCase();
+                  final isPdf = path.endsWith('.pdf');
+                  final isSvg = path.endsWith('.svg');
+                  final isImage = !isPdf && !isSvg;
 
-                return GestureDetector(
-                  onTap: () {
-                    if (isImage) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => _FullScreenImage(file: file),
-                        ),
-                      );
-                    } else {
-                      _showFileDetails(context, file);
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      image: isImage
-                          ? DecorationImage(
-                              image: FileImage(file),
-                              fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      if (isImage) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => _FullScreenImage(file: file),
+                          ),
+                        );
+                      } else {
+                        _showFileDetails(context, file);
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        image: isImage
+                            ? DecorationImage(
+                                image: FileImage(file),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: !isImage
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  isPdf
+                                      ? Icons.picture_as_pdf
+                                      : Icons
+                                            .image_aspect_ratio, // SVG icon proxy
+                                  size: 40,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                const SizedBox(height: 8),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  child: Text(
+                                    file.path.split('/').last,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                                ),
+                              ],
                             )
                           : null,
                     ),
-                    child: !isImage
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                isPdf
-                                    ? Icons.picture_as_pdf
-                                    : Icons
-                                          .image_aspect_ratio, // SVG icon proxy
-                                size: 40,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              const SizedBox(height: 8),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
-                                child: Text(
-                                  file.path.split('/').last,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 10),
-                                ),
-                              ),
-                            ],
-                          )
-                        : null,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
     );
   }
