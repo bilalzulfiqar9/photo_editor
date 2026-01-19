@@ -39,4 +39,9 @@ class ResizeRepositoryImpl implements ResizeRepository {
   Future<Map<String, dynamic>> getExifData(File file) {
     return dataSource.getExifData(file);
   }
+
+  @override
+  Future<void> writeExifData(File file, Map<String, dynamic> data) {
+    return dataSource.writeExifData(file, data);
+  }
 }

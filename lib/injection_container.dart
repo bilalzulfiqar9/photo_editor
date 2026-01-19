@@ -1,9 +1,11 @@
 import 'package:get_it/get_it.dart';
+
 import 'package:photo_editor/features/stitching/domain/repositories/stitching_repository.dart';
 import 'features/stitching/presentation/cubit/stitch_cubit.dart';
 import 'features/stitching/domain/usecases/stitch_images_usecase.dart';
 import 'features/stitching/data/repositories/stitching_repository_impl.dart';
 import 'features/stitching/data/datasources/stitching_data_source.dart';
+import 'features/studio/presentation/cubit/studio_cubit.dart';
 import 'features/markup/data/datasources/markup_data_source.dart';
 import 'features/markup/data/repositories/markup_repository_impl.dart';
 import 'features/markup/domain/repositories/markup_repository.dart';
@@ -25,17 +27,30 @@ import 'features/overlay/data/repositories/overlay_repository_impl.dart';
 import 'features/overlay/domain/repositories/overlay_repository.dart';
 import 'features/overlay/domain/usecases/save_overlay_usecase.dart';
 import 'features/overlay/presentation/cubit/overlay_cubit.dart';
-
-import 'package:photo_editor/core/theme/theme_cubit.dart';
+import 'features/payment/data/datasources/iap_service.dart';
+import 'features/payment/data/repositories/payment_repository_impl.dart';
+import 'features/payment/domain/repositories/payment_repository.dart';
+import 'features/payment/presentation/cubit/payment_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(() => ThemeCubit());
-  // Features - Home
+
+  // Features - Payment
+  sl.registerFactory(() => PaymentCubit(sl()));
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(
+    () => IAPService(
+      onPurchaseSuccess: (purchaseDetails) {},
+      onPurchaseError: (error) {},
+    ),
+  );
 
   // Features - Stitching
+
   sl.registerFactory(() => StitchCubit(sl()));
   sl.registerLazySingleton(() => StitchImagesUseCase(sl()));
   sl.registerLazySingleton<StitchingRepository>(
@@ -63,6 +78,12 @@ Future<void> init() async {
     () => WatermarkRepositoryImpl(),
   );
 
+  // Features - Studio
+  sl.registerFactory(() => StudioCubit());
+
+  // Features - Web Capture
+  // No DI needed for now as it's stateful widget, but good to have placeholder if we grow it.
+
   // Features - Crop
   sl.registerFactory(() => CropCubit(sl()));
   sl.registerLazySingleton(() => SaveCropUseCase(sl()));
@@ -72,8 +93,4 @@ Future<void> init() async {
   sl.registerFactory(() => OverlayCubit(sl()));
   sl.registerLazySingleton(() => SaveOverlayUseCase(sl()));
   sl.registerLazySingleton<OverlayRepository>(() => OverlayRepositoryImpl());
-
-  // Features - Capture
-
-  // Core
 }

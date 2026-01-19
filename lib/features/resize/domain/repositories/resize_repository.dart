@@ -11,4 +11,5 @@ abstract class ResizeRepository {
   });
 
   Future<Map<String, dynamic>> getExifData(File file);
+  Future<void> writeExifData(File file, Map<String, dynamic> data);
 }

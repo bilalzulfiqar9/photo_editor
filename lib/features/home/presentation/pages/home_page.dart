@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:photo_editor/core/presentation/widgets/hero_feature_card.dart';
-import 'package:photo_editor/core/presentation/widgets/tool_card.dart';
+
+import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
-import 'package:photo_editor/features/crop/presentation/pages/crop_screen.dart';
-import 'package:photo_editor/features/markup/presentation/pages/markup_screen.dart';
-import 'package:photo_editor/features/overlay/presentation/pages/overlay_screen.dart';
-import 'package:photo_editor/features/resize/presentation/pages/resize_screen.dart';
-import 'package:photo_editor/features/settings/presentation/pages/settings_screen.dart';
-import 'package:photo_editor/features/stitching/presentation/pages/stitch_screen.dart';
-import 'package:photo_editor/features/watermark/presentation/pages/watermark_screen.dart';
-import 'package:photo_editor/features/gallery/presentation/pages/gallery_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,173 +10,175 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
       appBar: AppBar(
-        title: const Text('Screen Stitch'),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.folder_open_outlined),
-              tooltip: 'My Work',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GalleryScreen(),
-                  ),
-                );
-              },
-            ),
+        title: const Text(
+          'Screen Stitch',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
-          Container(
-            margin: const EdgeInsets.only(right: 20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.settings_outlined),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        actions: [],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Create",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const Gap(16),
-            HeroFeatureCard(
-              title: 'Image Stitching',
-              subtitle: 'Join screenshots into one long masterpiece',
-              icon: Icons.layers, // You might want to use a specific asset here
-              gradientStart: const Color(0xFF9D44C0), // Purple from screenshot
-              gradientEnd: const Color(0xFF240046), // Darker purple
-              isPopular: true,
-              onTap: () async {
-                if (await PermissionHelper.requestStoragePermission()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const StitchScreen(),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: GestureDetector(
+                onTap: () => context.push('/pro'),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  );
-                }
-              },
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.diamond_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Go Ads Free",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Remove ads & unlock premium features",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            const Gap(32),
-            const Text(
-              "Tools",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 10,
+                right: 10,
+                bottom: 10,
+              ),
+              child: Text(
+                "Create & Edit",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-            const Gap(16),
-            Column(
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverGrid.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1.4,
               children: [
-                ToolCard(
-                  title: 'Watermark',
-                  subtitle: 'Add branding',
-                  icon: Icons.water_drop_outlined,
-                  iconColor: const Color(0xFF3A86FF), // Blue
+                EvokeToolCard(
+                  title: 'Stitch',
+                  subtitle: 'Combine screens',
+                  icon: Icons.layers,
+                  gradient: const [Color(0xFF9681EB), Color(0xFF7A67F5)],
+                  isNew: true,
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WatermarkScreen(),
-                        ),
-                      );
+                      context.push('/stitch');
                     }
                   },
                 ),
-                const Gap(12),
-                ToolCard(
-                  title: 'Photo Blender',
-                  subtitle: 'Mix images',
-                  icon: Icons.blur_linear,
-                  iconColor: const Color(0xFF06D6A0), // Green for blender
+                EvokeToolCard(
+                  title: 'Photo Studio',
+                  subtitle: 'Edit, Markup, Crop',
+                  icon: Icons.brush_outlined,
+                  gradient: const [Color(0xFF00E676), Color(0xFF1DE9B6)],
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OverlayScreen(),
-                        ),
-                      );
+                      context.push('/studio');
                     }
                   },
                 ),
-                const Gap(12),
-                ToolCard(
-                  title: 'Markup',
-                  subtitle: 'Draw & annotate',
-                  icon: Icons.edit_outlined,
-                  iconColor: const Color(0xFFFFBE0B), // Yellow/Orange
+                EvokeToolCard(
+                  title: 'Web Capture',
+                  subtitle: 'Website to Image',
+                  icon: Icons.public, // Changed icon to public/globe
+                  gradient: const [
+                    Color(0xFF2193b0),
+                    Color(0xFF6dd5ed),
+                  ], // Blue/Cyan
                   onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MarkupScreen(),
-                        ),
-                      );
-                    }
+                    context.push('/web-capture');
                   },
                 ),
-                const Gap(12),
-                ToolCard(
-                  title: 'Crop & Rotate',
-                  subtitle: 'Adjust layout',
-                  icon: Icons.crop,
-                  iconColor: const Color(0xFFFF006E), // Pink
-                  onTap: () async {
-                    if (await PermissionHelper.requestStoragePermission()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CropScreen(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                const Gap(12),
-                ToolCard(
+                EvokeToolCard(
                   title: 'Resize',
-                  subtitle: 'Change dimensions',
+                  subtitle: 'New dimensions',
                   icon: Icons.aspect_ratio,
-                  iconColor: const Color(0xFF8338EC), // Purple
+                  gradient: const [
+                    Color(0xFFFFA000),
+                    Color(0xFFFFC107),
+                  ], // Orange/Yellow
                   onTap: () async {
                     if (await PermissionHelper.requestStoragePermission()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ResizeScreen(),
-                        ),
-                      );
+                      context.push('/resize');
                     }
                   },
                 ),
-                const Gap(30), // Bottom padding
               ],
             ),
-          ],
-        ),
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+        ],
       ),
     );
   }

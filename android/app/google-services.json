@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817804035480",
+    "project_id": "screen-stitch",
+    "storage_bucket": "screen-stitch.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817804035480:android:4efe58effce18935f9d7ed",
+        "android_client_info": {
+          "package_name": "com.lahi.screenstitch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUR-pU23RcofON3tbdyM4g2gefiQgUokw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

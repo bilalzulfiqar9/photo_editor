@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:photo_editor/core/theme/theme_cubit.dart';
-import 'package:photo_editor/features/pro/presentation/pages/pro_screen.dart';
+
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -32,23 +31,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+      appBar: AppBar(
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        actions: [],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // Pro Banner
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProScreen()),
-              );
+              context.push('/pro');
             },
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFF006E), Color(0xFF8338EC)],
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor.withAlpha(200),
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor.withAlpha(200),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -87,32 +102,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Gap(32),
 
           const Text(
-            "Appearance",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              // color: Colors.white, // Remove hardcoded white
-            ),
-          ),
-          const Gap(16),
-          BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) {
-              return SwitchListTile(
-                title: const Text("Dark Mode"),
-                value: themeMode == ThemeMode.dark,
-                onChanged: (isDark) {
-                  context.read<ThemeCubit>().toggleTheme(isDark);
-                },
-                secondary: Icon(
-                  themeMode == ThemeMode.dark
-                      ? Icons.dark_mode_outlined
-                      : Icons.light_mode_outlined,
-                ),
-              );
-            },
-          ),
-          const Gap(32),
-          const Text(
             "General",
             style: TextStyle(
               fontSize: 18,
@@ -125,7 +114,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.restore,
             title: 'Restore Purchase',
             onTap: () {
-              // TODO: Implement restore
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Restore purchase implementation pending'),
@@ -168,14 +156,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const Gap(32),
+
+          const Gap(32),
+
           Center(
-            child: Text(
-              'Version $_version',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                fontSize: 14,
-              ),
-            ),
+            child: Text('Version $_version', style: TextStyle(fontSize: 14)),
           ),
         ],
       ),
@@ -205,33 +190,39 @@ class _SettingTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final contentColor = isDark ? Colors.white : Colors.black;
-    final containerColor = isDark
-        ? Colors.white.withOpacity(0.05)
-        : Colors.black.withOpacity(0.05);
+    final containerColor = Colors.white;
 
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.zero,
-      leading: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: containerColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, color: contentColor, size: 20),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: contentColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: EdgeInsets.only(left: 8, right: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: containerColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Theme.of(context).primaryColor),
+          ),
+          child: Icon(icon, color: Theme.of(context).primaryColor, size: 20),
         ),
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: contentColor.withOpacity(0.3),
-        size: 16,
+        title: Text(
+          title,
+          style: TextStyle(
+            color: contentColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: Theme.of(context).primaryColor,
+          size: 16,
+        ),
       ),
     );
   }

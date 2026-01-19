@@ -2,46 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static final ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color(0xFF0D0E15), // Deep Void
-    primaryColor: const Color(0xFF7B2CBF), // Electric Violet
-    colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF7B2CBF), // Electric Violet
-      secondary: Color(0xFF00F5D4), // Neon Cyan
-      surface: Color(0xFF1A1C29), // Midnight Blue
-      onSurface: Colors.white,
-    ),
-    textTheme: GoogleFonts.outfitTextTheme(
-      ThemeData.dark().textTheme,
-    ).apply(bodyColor: Colors.white, displayColor: Colors.white),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: true,
-      titleTextStyle: TextStyle(
-        fontFamily: 'Outfit',
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+  // Minimalist Color Palette - Light Focus
+  static const Color primary = Color(0xFF006F87);
+  static const Color accent = Color(0xFF3A86FF);
+
+  static const Color backgroundLight = Color(0xFFF5F5F5); // Light Grey Shade
+  static const Color surfaceLight = Colors.white;
+
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: backgroundLight,
+      colorScheme: const ColorScheme.light(
+        primary: primary,
+        secondary: accent,
+        surface: surfaceLight,
+        onSurface: Colors.black,
+        onPrimary: Colors.white,
       ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF7B2CBF),
-        foregroundColor: Colors.white,
-        elevation: 8,
-        shadowColor: const Color(0xFF7B2CBF).withOpacity(0.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Outfit',
+      cardTheme: CardThemeData(
+        color: surfaceLight,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide.none, // Removed border for cleaner white look
         ),
       ),
-    ),
-    // cardTheme removed to resolve lint error, using colorScheme.surface instead
-  );
+      appBarTheme: const AppBarTheme(
+        backgroundColor: backgroundLight,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: TextStyle(
+          fontFamily: 'Outfit',
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(
+        ThemeData.light().textTheme,
+      ).apply(bodyColor: Colors.black, displayColor: Colors.black),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        indicatorColor: Colors.black.withOpacity(0.1),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      ),
+    );
+  }
 }

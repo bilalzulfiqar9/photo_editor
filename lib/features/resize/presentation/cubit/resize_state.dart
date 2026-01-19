@@ -18,6 +18,9 @@ class ResizeReady extends ResizeState {
   final Map<String, dynamic> exifData;
   final int originalSize;
   final int? compressedSize;
+  final bool isCompressing;
+  final int? originalWidth;
+  final int? originalHeight;
 
   const ResizeReady({
     required this.originalFile,
@@ -25,7 +28,32 @@ class ResizeReady extends ResizeState {
     this.exifData = const {},
     required this.originalSize,
     this.compressedSize,
+    this.isCompressing = false,
+    this.originalWidth,
+    this.originalHeight,
   });
+
+  ResizeReady copyWith({
+    File? originalFile,
+    File? compressedFile,
+    Map<String, dynamic>? exifData,
+    int? originalSize,
+    int? compressedSize,
+    bool? isCompressing,
+    int? originalWidth,
+    int? originalHeight,
+  }) {
+    return ResizeReady(
+      originalFile: originalFile ?? this.originalFile,
+      compressedFile: compressedFile ?? this.compressedFile,
+      exifData: exifData ?? this.exifData,
+      originalSize: originalSize ?? this.originalSize,
+      compressedSize: compressedSize ?? this.compressedSize,
+      isCompressing: isCompressing ?? this.isCompressing,
+      originalWidth: originalWidth ?? this.originalWidth,
+      originalHeight: originalHeight ?? this.originalHeight,
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -34,6 +62,9 @@ class ResizeReady extends ResizeState {
     exifData,
     originalSize,
     compressedSize,
+    isCompressing,
+    originalWidth,
+    originalHeight,
   ];
 }
 
