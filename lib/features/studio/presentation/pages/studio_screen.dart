@@ -25,19 +25,17 @@ class StudioScreen extends StatelessWidget {
       child: BlocConsumer<StudioCubit, StudioState>(
         listener: (context, state) {
           if (state is StudioSaved) {
+            // Already handled by builder to show success UI.
+            // Delay popping to let user see "Saved!" message.
+            Future.delayed(const Duration(seconds: 1), () {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            });
+          } else if (state is StudioError) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text('Image Saved to Gallery!')));
-            Navigator.pop(context);
-          } else if (state is StudioError) {
-            // If cancel or error, just go back
-            if (state.message == "No image selected") {
-              Navigator.pop(context);
-            } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
-            }
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -59,13 +57,37 @@ class StudioScreen extends StatelessWidget {
             );
           } else if (state is StudioSaving) {
             return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 16),
+                    Text("Saving...", style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
+            );
+          } else if (state is StudioSaved) {
+            return const Scaffold(
+              backgroundColor: Colors.black,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green, size: 64),
+                    SizedBox(height: 16),
+                    Text("Saved!", style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
             );
           }
 
           return const Scaffold(
             backgroundColor: Colors.black, // Dark background while loading
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: CircularProgressIndicator(color: Colors.white)),
           );
         },
       ),

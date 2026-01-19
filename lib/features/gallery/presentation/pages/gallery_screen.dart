@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:photo_editor/core/utils/gallery_saver_helper.dart';
+import 'package:open_filex/open_filex.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -195,16 +196,28 @@ class _GalleryScreenState extends State<GalleryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FilledButton.icon(
-                  onPressed: () {
-                    // TODO: Implement open logic if possible
+                  onPressed: () async {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Opening not supported yet, please use Share',
-                        ),
-                      ),
-                    );
+                    try {
+                      final result = await OpenFilex.open(file.path);
+                      if (result.type != ResultType.done) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Could not open file: ${result.message}',
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error opening file: $e')),
+                        );
+                      }
+                    }
                   },
                   icon: const Icon(Icons.open_in_new),
                   label: const Text("Open"),
