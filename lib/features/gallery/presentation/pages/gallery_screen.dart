@@ -199,7 +199,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   onPressed: () async {
                     Navigator.pop(context);
                     try {
-                      final result = await OpenFilex.open(file.path);
+                      // Copy to cache dir for FileProvider access
+                      final tempDir = await getTemporaryDirectory();
+                      final fileName = file.path.split('/').last;
+                      final tempFile = File('${tempDir.path}/$fileName');
+                      await file.copy(tempFile.path);
+
+                      final result = await OpenFilex.open(tempFile.path);
                       if (result.type != ResultType.done) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
