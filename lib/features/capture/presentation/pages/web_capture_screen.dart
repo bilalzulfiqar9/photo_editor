@@ -1,5 +1,11 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'package:photo_editor/features/studio/presentation/pages/studio_screen.dart';
 
 class WebCaptureScreen extends StatefulWidget {
   const WebCaptureScreen({super.key});
@@ -13,6 +19,7 @@ class _WebCaptureScreenState extends State<WebCaptureScreen> {
   final TextEditingController _urlController = TextEditingController(
     text: 'https://flutter.dev',
   );
+  final ScreenshotController _screenshotController = ScreenshotController();
   bool _isLoading = false;
 
   @override
@@ -28,35 +35,53 @@ class _WebCaptureScreenState extends State<WebCaptureScreen> {
           onPageFinished: (String url) {
             setState(() => _isLoading = false);
           },
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
         ),
       )
       ..loadRequest(Uri.parse('https://flutter.dev'));
   }
 
   Future<void> _captureVisible() async {
-    // Note: This only captures the visible viewport in many compiled webview implementations due to platform limitations.
-    // However, it's a good "Capture" feature for now.
-    // For full page, we'd need more complex JS injection.
+    setState(() => _isLoading = true);
+    try {
+      // NOTE: Screenshotting a WebView (Platform View) is tricky.
+      // 1. screenshot package: Works well on Android, issues on iOS sometimes because of platform view composite.
+      // 2. _controller.takeScreenshot() isn't native to this package without extensions.
+      // Trying standard screenshot widget first.
 
-    // Actually, webview_flutter doesn't have a direct "takeScreenshot" method exposed easily in all versions without platform views.
-    // But let's assume standard usage or standard boundary repaint if possible?
-    // WebView is a platform view, RepaintBoundary might not work perfectly on all Flutter versions for it.
-    // Let's try native controller method if available or a workaround.
-    // In strict mode, we might just skip the capture and let user know "Functionality limited".
+      final Uint8List? capturedImage = await _screenshotController.capture();
 
-    // BUT, I want to WOW.
-    // Let's use a workaround: The user will likely use system screenshot, but I can offer "Edit Last Screenshot" if I could access gallery.
+      if (capturedImage != null) {
+        final tempDir = await getTemporaryDirectory();
+        final file = await File(
+          '${tempDir.path}/web_capture_${DateTime.now().millisecondsSinceEpoch}.png',
+        ).create();
+        await file.writeAsBytes(capturedImage);
 
-    // Let's just try to Navigate to Markup with a dummy valid file for now or implement file picking if this fails.
-    // Wait, I can't easily capture WebView pixels in Flutter without native code.
+        if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Capture coming soon! Use system screenshot then Stitch.",
-        ),
-      ),
-    );
+        // Navigate to Studio Screen with the captured file
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => StudioScreen(initialImage: file),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to capture screenshot")),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error capturing: $e")));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -83,13 +108,19 @@ class _WebCaptureScreenState extends State<WebCaptureScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.camera_alt),
-            onPressed: _captureVisible,
+            onPressed: _isLoading ? null : _captureVisible,
           ),
         ],
       ),
       body: Stack(
         children: [
-          WebViewWidget(controller: _controller),
+          Screenshot(
+            controller: _screenshotController,
+            // WebViewWidget is a platform view. Screenshot package v2 might struggle
+            // without specific flutter render flags or on iOS.
+            // But let's try this standard approach first.
+            child: WebViewWidget(controller: _controller),
+          ),
           if (_isLoading) const Center(child: CircularProgressIndicator()),
         ],
       ),
