@@ -47,14 +47,13 @@ class PaymentRepositoryImpl implements PaymentRepository {
       await iapService.restorePurchases();
       // verification logic should be here. For now assume restore valid = premium
       // In real app, we check start/end dates from restored purchases.
-      // We will rely on stream updates to actually set true/false, BUT
-      // since iapService.restorePurchases() just triggers the stream,
-      // we can't confirm success here immediately unless we wait.
-      // However, for this simplified logic:
-      await setPremiumStatus(true);
+      // We will rely on stream updates to actually set true/false.
+      // Removed optimistic setting here to rely on the stream.
       return const Right(null);
     } catch (e) {
-      await setPremiumStatus(false);
+      // If restore specifically throws an error (e.g. network), we might not want to revoke
+      // unless we are sure it means "no purchase".
+      // Safe to just return failure and not change status unless we know for sure.
       return Left(ServerFailure(e.toString()));
     }
   }

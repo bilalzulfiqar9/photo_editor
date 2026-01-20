@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -147,14 +147,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.share_outlined,
             title: 'Share App',
             onTap: () {
-              // TODO: Implement share
+              Share.share(
+                'Check out Screen Stitch! Join screenshots, edit photos, and more. Download now: https://play.google.com/store/apps/details?id=com.lahi.screenstitch',
+              );
             },
           ),
           _SettingTile(
             icon: Icons.thumb_up_alt_outlined,
             title: 'Rate Us',
-            onTap: () {
-              // TODO: Implement rating
+            onTap: () async {
+              final packageInfo = await PackageInfo.fromPlatform();
+              final packageName = packageInfo.packageName;
+              final url =
+                  'https://play.google.com/store/apps/details?id=$packageName';
+              _launchUrl(url);
             },
           ),
           _SettingTile(
