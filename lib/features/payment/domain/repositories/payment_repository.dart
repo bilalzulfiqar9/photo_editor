@@ -11,4 +11,6 @@ abstract class PaymentRepository {
   Future<Either<Failure, void>> subscribeToPlan(ProductDetails product);
   Future<Either<Failure, List<ProductDetails>>> getProducts();
   Future<Either<Failure, void>> restorePurchases();
+  Future<bool> isUserPremium();
+  Future<void> setPremiumStatus(bool isPremium);
 }

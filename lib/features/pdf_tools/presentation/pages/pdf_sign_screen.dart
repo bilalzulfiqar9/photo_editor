@@ -9,7 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pro_image_editor/pro_image_editor.dart';
+import 'package:photo_editor/features/pdf_tools/presentation/pages/pdf_page_signer.dart';
 
 class PdfSignScreen extends StatefulWidget {
   const PdfSignScreen({super.key});
@@ -64,16 +64,16 @@ class _PdfSignScreenState extends State<PdfSignScreen> {
   }
 
   Future<void> _editPage(int index) async {
-    final Uint8List? editedImage = await Navigator.push(
+    final Uint8List? signedImage = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => _EditorPage(imageBytes: _pageImages[index]),
+        builder: (context) => PdfPageSigner(pageImage: _pageImages[index]),
       ),
     );
 
-    if (editedImage != null) {
+    if (signedImage != null) {
       setState(() {
-        _pageImages[index] = editedImage;
+        _pageImages[index] = signedImage;
       });
     }
   }
@@ -313,30 +313,6 @@ class _PdfSignScreenState extends State<PdfSignScreen> {
                 ),
               ],
             ),
-    );
-  }
-}
-
-class _EditorPage extends StatelessWidget {
-  final Uint8List imageBytes;
-
-  const _EditorPage({required this.imageBytes});
-
-  @override
-  Widget build(BuildContext context) {
-    return ProImageEditor.memory(
-      imageBytes,
-      callbacks: ProImageEditorCallbacks(
-        onImageEditingComplete: (bytes) async {
-          Navigator.pop(context, bytes);
-        },
-        onCloseEditor: (_) {
-          Navigator.pop(context);
-        },
-      ),
-      configs: const ProImageEditorConfigs(
-        designMode: ImageEditorDesignMode.material,
-      ),
     );
   }
 }

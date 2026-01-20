@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -143,6 +145,13 @@ class HomePage extends StatelessWidget {
                   icon: Icons.brush_outlined,
                   gradient: const [Color(0xFF00E676), Color(0xFF1DE9B6)],
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/studio');
                     }
@@ -169,6 +178,13 @@ class HomePage extends StatelessWidget {
                     Color(0xFFFFC107),
                   ], // Orange/Yellow
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/resize');
                     }

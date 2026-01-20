@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -125,14 +125,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.shield_outlined,
             title: 'Privacy Policy',
             onTap: () {
-              _launchUrl('https://example.com/privacy');
+              _launchUrl(
+                'https://lahi-media.github.io/ScreenStitch-privacy-policy/',
+              );
             },
           ),
           _SettingTile(
             icon: Icons.description_outlined,
             title: 'Terms of Service',
             onTap: () {
-              _launchUrl('https://example.com/terms');
+              _launchUrl('https://lahi-media.github.io/ScreenStitch-tos/');
             },
           ),
           const Gap(32),
@@ -145,14 +147,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.share_outlined,
             title: 'Share App',
             onTap: () {
-              // TODO: Implement share
+              Share.share(
+                'Check out Screen Stitch! Join screenshots, edit photos, and more. Download now: https://play.google.com/store/apps/details?id=com.lahi.screenstitch',
+              );
             },
           ),
           _SettingTile(
             icon: Icons.thumb_up_alt_outlined,
             title: 'Rate Us',
+            onTap: () async {
+              final packageInfo = await PackageInfo.fromPlatform();
+              final packageName = packageInfo.packageName;
+              final url =
+                  'https://play.google.com/store/apps/details?id=$packageName';
+              _launchUrl(url);
+            },
+          ),
+          _SettingTile(
+            icon: Icons.mail_outline,
+            title: 'Query or Feedback',
             onTap: () {
-              // TODO: Implement rating
+              _launchUrl('mailto:contact@lahi.io');
             },
           ),
           const Gap(32),
@@ -169,8 +184,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not launch ${uri.scheme}')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error launching ${uri.scheme}: $e')),
+        );
+      }
     }
   }
 }
