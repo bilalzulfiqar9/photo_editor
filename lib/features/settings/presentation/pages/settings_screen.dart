@@ -125,14 +125,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.shield_outlined,
             title: 'Privacy Policy',
             onTap: () {
-              _launchUrl('https://example.com/privacy');
+              _launchUrl(
+                'https://lahi-media.github.io/ScreenStitch-privacy-policy/',
+              );
             },
           ),
           _SettingTile(
             icon: Icons.description_outlined,
             title: 'Terms of Service',
             onTap: () {
-              _launchUrl('https://example.com/terms');
+              _launchUrl('https://lahi-media.github.io/ScreenStitch-tos/');
             },
           ),
           const Gap(32),
@@ -155,6 +157,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // TODO: Implement rating
             },
           ),
+          _SettingTile(
+            icon: Icons.mail_outline,
+            title: 'Query or Feedback',
+            onTap: () {
+              _launchUrl('mailto:contact@lahi.io');
+            },
+          ),
           const Gap(32),
 
           const Gap(32),
@@ -169,8 +178,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not launch ${uri.scheme}')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error launching ${uri.scheme}: $e')),
+        );
+      }
     }
   }
 }

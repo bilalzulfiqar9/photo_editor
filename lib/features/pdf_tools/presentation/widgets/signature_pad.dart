@@ -74,18 +74,27 @@ class _SignaturePadState extends State<SignaturePad> {
               child: Container(
                 margin: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                // Ensure the gesture detector captures touches by having a transparent background or simply filling the area
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: HandSignature(
-                    control: control,
-                    color: Colors.black,
-                    width: 2.0, // Minimum stroke width
-                    maxWidth: 4.0, // Maximum stroke width
-                    type: SignatureDrawType.shape,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        height: constraints.maxHeight,
+                        width: constraints.maxWidth,
+                        color: Colors.white,
+                        child: HandSignature(
+                          control: control,
+                          color: Colors.black,
+                          width: 3.0,
+                          maxWidth: 5.0,
+                          type: SignatureDrawType.shape,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

@@ -16,7 +16,7 @@ class PdfPageSigner extends StatefulWidget {
 class _PdfPageSignerState extends State<PdfPageSigner> {
   final ValueNotifier<Matrix4> notifier = ValueNotifier(Matrix4.identity());
   Uint8List? _signatureImage;
-  GlobalKey _imageKey = GlobalKey();
+  final GlobalKey _imageKey = GlobalKey();
 
   Future<void> _addSignature() async {
     await Navigator.of(context).push(
@@ -50,7 +50,18 @@ class _PdfPageSignerState extends State<PdfPageSigner> {
       // Decode the background image
       final ui.Image bgImage = await decodeImageFromList(widget.pageImage);
 
-      // Draw background
+      // Draw white background first to handle transparency
+      canvas.drawRect(
+        Rect.fromLTWH(
+          0,
+          0,
+          bgImage.width.toDouble(),
+          bgImage.height.toDouble(),
+        ),
+        Paint()..color = Colors.white,
+      );
+
+      // Draw background image
       canvas.drawImage(bgImage, Offset.zero, Paint());
 
       // Draw signature with transformations
@@ -152,7 +163,7 @@ class _PdfPageSignerState extends State<PdfPageSigner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: const Text("Sign Page", style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
@@ -170,12 +181,16 @@ class _PdfPageSignerState extends State<PdfPageSigner> {
                 // Background Page Image
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    return Image.memory(
-                      widget.pageImage,
-                      key: _imageKey,
-                      fit: BoxFit.contain,
+                    return Container(
                       width: constraints.maxWidth,
                       height: constraints.maxHeight,
+                      color: Colors
+                          .white, // Add white background for transparent PDFs
+                      child: Image.memory(
+                        widget.pageImage,
+                        key: _imageKey,
+                        fit: BoxFit.contain,
+                      ),
                     );
                   },
                 ),

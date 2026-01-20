@@ -63,7 +63,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     final result = await repository.restorePurchases();
     result.fold(
       (failure) => emit(PaymentFailure(failure.message)),
-      (_) => emit(PaymentSuccess()), // Or reload products/check entitlements
+      (_) => emit(PaymentSuccess()),
     );
   }
 }
