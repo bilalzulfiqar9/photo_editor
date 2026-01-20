@@ -58,6 +58,8 @@ dependencies:
   package_info_plus: ^4.2.0
   url_launcher: ^6.2.1
   gal: ^2.3.0
+  hand_signature: ^3.0.1
+  matrix_gesture_detector: ^0.2.0-nullsafety.1
 
   # Payment
   # flutter_stripe: ^10.2.0
