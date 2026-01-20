@@ -66,4 +66,6 @@ class PaymentCubit extends Cubit<PaymentState> {
       (_) => emit(PaymentSuccess()),
     );
   }
+
+  Future<bool> get isPremium => repository.isUserPremium();
 }
