@@ -376,6 +376,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.3.3"
+  hand_signature:
+    dependency: "direct main"
+    description:
+      name: hand_signature
+      sha256: "05b40d3b2d1885a5dda126f26db386660aa46e497b63c96feb91d3198a667eea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0+2"
   http:
     dependency: transitive
     description:
@@ -568,6 +576,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  matrix_gesture_detector:
+    dependency: "direct main"
+    description:
+      name: matrix_gesture_detector
+      sha256: ed891802e7f018b9fe9ef2e126d361814994c98f0ba86bc17aaaaddc2b55f466
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0-nullsafety.1"
   meta:
     dependency: transitive
     description:
@@ -600,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  open_filex:
+    dependency: "direct main"
+    description:
+      name: open_filex
+      sha256: "9976da61b6a72302cf3b1efbce259200cd40232643a467aac7370addf94d6900"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.7.0"
   package_info_plus:
     dependency: "direct main"
     description:

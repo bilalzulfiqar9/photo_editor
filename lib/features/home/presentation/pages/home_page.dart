@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -28,6 +30,77 @@ class HomePage extends StatelessWidget {
       ),
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: GestureDetector(
+                onTap: () => context.push('/pro'),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.diamond_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Go Ads Free",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Remove ads & unlock premium features",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -72,6 +145,13 @@ class HomePage extends StatelessWidget {
                   icon: Icons.brush_outlined,
                   gradient: const [Color(0xFF00E676), Color(0xFF1DE9B6)],
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/studio');
                     }
@@ -98,6 +178,13 @@ class HomePage extends StatelessWidget {
                     Color(0xFFFFC107),
                   ], // Orange/Yellow
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/resize');
                     }

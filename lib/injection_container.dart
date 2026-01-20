@@ -44,8 +44,14 @@ Future<void> init() async {
   );
   sl.registerLazySingleton(
     () => IAPService(
-      onPurchaseSuccess: (purchaseDetails) {},
-      onPurchaseError: (error) {},
+      onPurchaseSuccess: (purchaseDetails) {
+        sl<PaymentRepository>().setPremiumStatus(true);
+      },
+      onPurchaseError: (error) {
+        // Optionally handle error or reset status if needed,
+        // but usually we don't revoke premium on simple error.
+        // If it was a failed restore, maybe.
+      },
     ),
   );
 

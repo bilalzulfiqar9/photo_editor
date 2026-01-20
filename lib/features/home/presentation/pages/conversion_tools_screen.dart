@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 class ConversionToolsScreen extends StatelessWidget {
   const ConversionToolsScreen({super.key});
@@ -78,6 +80,13 @@ class ConversionToolsScreen extends StatelessWidget {
                     Color(0xFFFF4B2B),
                   ], // Red/Pink
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/png-to-pdf');
                     }
@@ -92,6 +101,13 @@ class ConversionToolsScreen extends StatelessWidget {
                     Color(0xFF38ef7d),
                   ], // Green
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/image-to-pdf');
                     }
@@ -106,6 +122,13 @@ class ConversionToolsScreen extends StatelessWidget {
                     Color(0xFF6dd5ed),
                   ], // Blue/Cyan
                   onTap: () async {
+                    final isPremium = await context
+                        .read<PaymentCubit>()
+                        .isPremium;
+                    if (!isPremium) {
+                      context.push('/pro');
+                      return;
+                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/pdf-sign');
                     }

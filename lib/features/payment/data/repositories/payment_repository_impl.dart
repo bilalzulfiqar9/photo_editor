@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/repositories/payment_repository.dart';
 import '../datasources/iap_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentRepositoryImpl implements PaymentRepository {
   final IAPService iapService;
@@ -44,9 +45,28 @@ class PaymentRepositoryImpl implements PaymentRepository {
   Future<Either<Failure, void>> restorePurchases() async {
     try {
       await iapService.restorePurchases();
+      // verification logic should be here. For now assume restore valid = premium
+      // In real app, we check start/end dates from restored purchases.
+      // We will rely on stream updates to actually set true/false.
+      // Removed optimistic setting here to rely on the stream.
       return const Right(null);
     } catch (e) {
+      // If restore specifically throws an error (e.g. network), we might not want to revoke
+      // unless we are sure it means "no purchase".
+      // Safe to just return failure and not change status unless we know for sure.
       return Left(ServerFailure(e.toString()));
     }
+  }
+
+  @override
+  Future<bool> isUserPremium() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('is_premium') ?? false;
+  }
+
+  @override
+  Future<void> setPremiumStatus(bool isPremium) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_premium', isPremium);
   }
 }
