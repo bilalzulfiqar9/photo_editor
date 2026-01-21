@@ -158,7 +158,7 @@ class EvokeToolCard extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: FontWeight.bold,
         color: color,
         letterSpacing: -0.5,
