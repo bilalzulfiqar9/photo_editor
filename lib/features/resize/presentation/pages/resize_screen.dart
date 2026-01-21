@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 import 'package:photo_editor/features/resize/presentation/cubit/resize_cubit.dart';
 import 'package:photo_editor/features/resize/presentation/cubit/resize_state.dart';
@@ -303,6 +305,13 @@ class _ResizeScreenState extends State<ResizeScreen> {
               onPressed: displayedImage == null
                   ? null
                   : () async {
+                      final isPremium = await context
+                          .read<PaymentCubit>()
+                          .isPremium;
+                      if (!isPremium) {
+                        context.push('/pro');
+                        return;
+                      }
                       final success = await GallerySaverHelper.saveImage(
                         displayedImage!.path,
                       );

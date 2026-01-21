@@ -10,6 +10,11 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:photo_editor/features/pdf_tools/presentation/pages/pdf_page_signer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
+import 'package:flutter/foundation.dart'; // for compute
+import 'package:photo_editor/features/pdf_tools/presentation/pages/pdf_worker.dart';
 
 class PdfSignScreen extends StatefulWidget {
   const PdfSignScreen({super.key});
@@ -81,29 +86,24 @@ class _PdfSignScreenState extends State<PdfSignScreen> {
   Future<void> _saveSignedPdf({bool share = false}) async {
     if (_pageImages.isEmpty) return;
 
+    // Check Premium
+    final isPremium = await context.read<PaymentCubit>().isPremium;
+    if (!isPremium) {
+      context.push('/pro');
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
-      final doc = pw.Document();
-
-      for (final imageBytes in _pageImages) {
-        final image = pw.MemoryImage(imageBytes);
-        doc.addPage(
-          pw.Page(
-            pageFormat: PdfPageFormat.a4,
-            build: (pw.Context context) {
-              return pw.Center(child: pw.Image(image));
-            },
-            margin: pw.EdgeInsets.zero, // Full page image
-          ),
-        );
-      }
+      // Offload PDF generation to a worker isolate
+      final pdfBytes = await compute(generatePdfBytes, _pageImages);
 
       final output = await getApplicationDocumentsDirectory();
       final newFile = File(
         '${output.path}/signed_pdf_${DateTime.now().millisecondsSinceEpoch}.pdf',
       );
-      await newFile.writeAsBytes(await doc.save());
+      await newFile.writeAsBytes(pdfBytes);
 
       // Save to Public Downloads
       final publicPath = await GallerySaverHelper.saveFileToDownloads(

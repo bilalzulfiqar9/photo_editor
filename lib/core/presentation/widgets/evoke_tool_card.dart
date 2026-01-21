@@ -8,6 +8,7 @@ class EvokeToolCard extends StatelessWidget {
   final Color iconColor;
   final VoidCallback onTap;
   final bool isNew;
+  final String? badgeText;
   final List<Color>? gradient;
 
   const EvokeToolCard({
@@ -18,6 +19,7 @@ class EvokeToolCard extends StatelessWidget {
     this.iconColor = const Color(0xFF3A86FF),
     required this.onTap,
     this.isNew = false,
+    this.badgeText,
     this.gradient,
   });
 
@@ -82,14 +84,14 @@ class EvokeToolCard extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: textColor,
                               ),
                             ),
                     ),
-                    if (isNew) const Gap(8),
-                    if (isNew)
+                    if (isNew || badgeText != null) const Gap(8),
+                    if (isNew || badgeText != null)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -102,7 +104,7 @@ class EvokeToolCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          "New",
+                          badgeText ?? "New",
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -156,7 +158,7 @@ class EvokeToolCard extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: FontWeight.bold,
         color: color,
         letterSpacing: -0.5,
