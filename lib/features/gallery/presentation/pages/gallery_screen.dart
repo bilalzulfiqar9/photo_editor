@@ -34,7 +34,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     setState(() => _loading = true);
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final files = directory.listSync();
+      // Use async list() to avoid blocking the main thread
+      final files = await directory.list().toList();
       final imageFiles = files
           .where(
             (file) =>
@@ -141,7 +142,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
                         borderRadius: BorderRadius.circular(12),
                         image: isImage
                             ? DecorationImage(
-                                image: FileImage(file),
+                                // Resize image for thumbnail to save memory
+                                image: ResizeImage(
+                                  FileImage(file),
+                                  width: 300, // Optimize for grid
+                                ),
                                 fit: BoxFit.cover,
                               )
                             : null,

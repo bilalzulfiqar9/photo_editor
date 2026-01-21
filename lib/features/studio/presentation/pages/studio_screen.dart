@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_editor/features/studio/presentation/cubit/studio_cubit.dart';
+import 'package:go_router/go_router.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 import 'package:photo_editor/injection_container.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
@@ -48,6 +50,13 @@ class StudioScreen extends StatelessWidget {
               ),
               callbacks: ProImageEditorCallbacks(
                 onImageEditingComplete: (bytes) async {
+                  final isPremium = await context
+                      .read<PaymentCubit>()
+                      .isPremium;
+                  if (!isPremium) {
+                    context.push('/pro');
+                    return;
+                  }
                   context.read<StudioCubit>().save(bytes);
                 },
                 onCloseEditor: (_) {

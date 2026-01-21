@@ -44,17 +44,10 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   Future<void> subscribeToPlan(ProductDetails product) async {
-    // Keep loading state or show overlay?
-    // Usually IAP is async and handled by stream, but here we trigger the buy flow.
-    // The stream listener in IAPService should handle success/updates.
-    // Ideally we might not emit Loading here effectively if we want to keep showing products.
-    // proper way: emit loading, wait for result.
     final result = await repository.subscribeToPlan(product);
     result.fold(
       (failure) => emit(PaymentFailure(failure.message)),
-      (_) =>
-          null, // Purchase flow initiated. Success handled via stream if we wired it up fully.
-      // For this simplified version, assuming repo returns Right(null) when flow starts.
+      (_) => null,
     );
   }
 

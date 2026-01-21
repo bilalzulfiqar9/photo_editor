@@ -29,52 +29,59 @@ class IsolateInput {
 }
 
 Future<File> _stitchIsolate(IsolateInput input) async {
-  List<img.Image> decodedImages = [];
   int maxWidth = 0;
+  List<_ImageInfo> imageInfos = [];
 
-  // 1. Decode and find Max Width
+  // 1. Pass 1: Decode to get dimensions only, then discard memory
   for (var path in input.paths) {
     final bytes = await File(path).readAsBytes();
     final decoded = img.decodeImage(bytes);
     if (decoded != null) {
-      decodedImages.add(decoded);
       if (decoded.width > maxWidth) maxWidth = decoded.width;
+      imageInfos.add(_ImageInfo(path, decoded.width, decoded.height));
     }
   }
 
-  if (decodedImages.isEmpty) throw Exception("Could not decode images");
+  if (imageInfos.isEmpty) throw Exception("Could not decode images");
 
-  // 2. Calculate Total Height based on Resized Dimensions
-  // Limit max width to avoid OOM and long processing
+  // 2. Calculate Dimensions
   const int targetLimit = 1080;
   final int processingWidth = maxWidth > targetLimit ? targetLimit : maxWidth;
 
-  // 2. Calculate Total Height based on Resized Dimensions
   int totalHeight = 0;
-  for (var image in decodedImages) {
-    if (image.width != processingWidth) {
-      // Calculate scaled height: h2 = h1 * (w2 / w1)
-      final double resultHeight =
-          image.height * (processingWidth / image.width);
-      totalHeight += resultHeight.round();
+  for (var i = 0; i < imageInfos.length; i++) {
+    final info = imageInfos[i];
+    if (info.width != processingWidth) {
+      final double resultHeight = info.height * (processingWidth / info.width);
+      final int newHeight = resultHeight.round();
+      imageInfos[i] = info.copyWith(
+        targetHeight: newHeight,
+      ); // Store calculated height
+      totalHeight += newHeight;
     } else {
-      totalHeight += image.height;
+      imageInfos[i] = info.copyWith(targetHeight: info.height);
+      totalHeight += info.height;
     }
   }
 
   // 3. Create Canvas
   final mergedImage = img.Image(width: processingWidth, height: totalHeight);
 
-  // 4. Composite
+  // 4. Pass 2: Decode again, resize, and composite one by one
   int currentY = 0;
-  for (var image in decodedImages) {
-    img.Image imageToDraw = image;
-    if (image.width != processingWidth) {
-      imageToDraw = img.copyResize(image, width: processingWidth);
-    }
+  for (var info in imageInfos) {
+    final bytes = await File(info.path).readAsBytes();
+    img.Image? image = img.decodeImage(bytes);
 
-    img.compositeImage(mergedImage, imageToDraw, dstY: currentY);
-    currentY += imageToDraw.height;
+    if (image != null) {
+      if (image.width != processingWidth) {
+        image = img.copyResize(image, width: processingWidth);
+      }
+
+      img.compositeImage(mergedImage, image, dstY: currentY);
+      currentY += image.height;
+      // Release memory for this image in next iteration loop
+    }
   }
 
   // 5. Save
@@ -83,4 +90,22 @@ Future<File> _stitchIsolate(IsolateInput input) async {
   await targetFile.writeAsBytes(img.encodeJpg(mergedImage));
 
   return targetFile;
+}
+
+class _ImageInfo {
+  final String path;
+  final int width;
+  final int height;
+  final int? targetHeight;
+
+  _ImageInfo(this.path, this.width, this.height, {this.targetHeight});
+
+  _ImageInfo copyWith({int? targetHeight}) {
+    return _ImageInfo(
+      path,
+      width,
+      height,
+      targetHeight: targetHeight ?? this.targetHeight,
+    );
+  }
 }
