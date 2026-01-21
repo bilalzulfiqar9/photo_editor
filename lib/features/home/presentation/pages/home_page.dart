@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -144,14 +142,8 @@ class HomePage extends StatelessWidget {
                   subtitle: 'Edit, Markup, Crop',
                   icon: Icons.brush_outlined,
                   gradient: const [Color(0xFF00E676), Color(0xFF1DE9B6)],
+                  badgeText: 'Try', // Add badge logic
                   onTap: () async {
-                    final isPremium = await context
-                        .read<PaymentCubit>()
-                        .isPremium;
-                    if (!isPremium) {
-                      context.push('/pro');
-                      return;
-                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/studio');
                     }
@@ -160,11 +152,8 @@ class HomePage extends StatelessWidget {
                 EvokeToolCard(
                   title: 'Web Capture',
                   subtitle: 'Website to Image',
-                  icon: Icons.public, // Changed icon to public/globe
-                  gradient: const [
-                    Color(0xFF2193b0),
-                    Color(0xFF6dd5ed),
-                  ], // Blue/Cyan
+                  icon: Icons.public,
+                  gradient: const [Color(0xFF2193b0), Color(0xFF6dd5ed)],
                   onTap: () async {
                     context.push('/web-capture');
                   },
@@ -173,18 +162,9 @@ class HomePage extends StatelessWidget {
                   title: 'Resize',
                   subtitle: 'New dimensions',
                   icon: Icons.aspect_ratio,
-                  gradient: const [
-                    Color(0xFFFFA000),
-                    Color(0xFFFFC107),
-                  ], // Orange/Yellow
+                  gradient: const [Color(0xFFFFA000), Color(0xFFFFC107)],
+                  badgeText: 'Try', // Add badge logic
                   onTap: () async {
-                    final isPremium = await context
-                        .read<PaymentCubit>()
-                        .isPremium;
-                    if (!isPremium) {
-                      context.push('/pro');
-                      return;
-                    }
                     if (await PermissionHelper.requestStoragePermission()) {
                       context.push('/resize');
                     }

@@ -7,6 +7,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
 
 class PngToPdfScreen extends StatefulWidget {
   const PngToPdfScreen({super.key});
@@ -30,6 +33,11 @@ class _PngToPdfScreenState extends State<PngToPdfScreen> {
   }
 
   Future<void> _generatePdf({bool share = false}) async {
+    final isPremium = await context.read<PaymentCubit>().isPremium;
+    if (!isPremium) {
+      context.push('/pro');
+      return;
+    }
     if (_images.isEmpty) return;
 
     setState(() => _isGenerating = true);
