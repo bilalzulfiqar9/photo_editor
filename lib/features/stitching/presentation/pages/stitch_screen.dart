@@ -153,6 +153,7 @@ class StitchScreen extends StatelessWidget {
                                         width: 50,
                                         height: 50,
                                         fit: BoxFit.cover,
+                                        cacheWidth: 150,
                                       ),
                                     ),
                                     title: Text(
