@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Minimalist Color Palette - Light Focus
-  static const Color primary = Color(0xFF006F87);
+  static const Color primary = Color.fromARGB(255, 0, 183, 224);
   static const Color accent = Color(0xFF3A86FF);
 
-  static const Color backgroundLight = Color(0xFFF5F5F5); // Light Grey Shade
+  static const Color backgroundLight = Color(0xFFF5F5F5);
   static const Color surfaceLight = Colors.white;
 
   static ThemeData get lightTheme {
@@ -26,7 +26,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide.none, // Removed border for cleaner white look
+          side: BorderSide.none,
         ),
       ),
       appBarTheme: const AppBarTheme(
