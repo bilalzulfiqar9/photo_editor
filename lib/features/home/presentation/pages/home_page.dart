@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
 
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
+import 'package:photo_editor/core/presentation/widgets/banner_ad_widget.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
 import 'package:go_router/go_router.dart';
+import 'package:photo_editor/injection_container.dart';
+import 'package:photo_editor/core/ads/ad_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late AdService _adService;
+  late dynamic _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _adService = sl<AdService>();
+    _bannerAd = _adService.loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,6 +198,14 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+          SliverToBoxAdapter(
+            child: _adService.hasBannerAd && _bannerAd != null
+                ? SafeArea(
+                    top: false,
+                    child: BannerAdWidget(bannerAd: _bannerAd),
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );

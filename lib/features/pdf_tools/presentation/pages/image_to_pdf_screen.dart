@@ -10,6 +10,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_editor/features/payment/presentation/cubit/payment_cubit.dart';
+import 'package:photo_editor/injection_container.dart';
+import 'package:photo_editor/core/ads/ad_service.dart';
 
 class ImageToPdfScreen extends StatefulWidget {
   const ImageToPdfScreen({super.key});
@@ -67,6 +69,7 @@ class _ImageToPdfScreenState extends State<ImageToPdfScreen> {
         setState(() => _isGenerating = false);
         // Show success and share option
         GallerySaverHelper.shouldReloadGallery.value++;
+        sl<AdService>().onSuccessfulSaveOrExport();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('PDF Generated Successfully!'),
