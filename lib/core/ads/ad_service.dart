@@ -21,7 +21,7 @@ class AdService with WidgetsBindingObserver {
   InterstitialAd? _interstitialAd;
   final List<BannerAd> _bannerAds = [];
   bool _isLoading = false;
-  bool _isBannerLoading = false;
+  final bool _isBannerLoading = false;
   bool _isPremium = false;
 
   /// Tracks app lifecycle state (true when app is in foreground)
