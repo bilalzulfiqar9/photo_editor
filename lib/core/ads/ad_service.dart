@@ -6,8 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Centralized Ad Service for managing Google AdMob Interstitial and Banner Ads
 /// 
-/// Features:
-/// - Frequency-based ad display (configurable save/export action count)
+ /// - Frequency-based ad display (configurable save/export action count)
  /// - Premium user detection (no ads for premium users)
 /// - App lifecycle awareness (no ads when app is backgrounded)
 /// - Production-ready with test ad support for development
