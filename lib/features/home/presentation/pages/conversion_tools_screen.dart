@@ -2,10 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:photo_editor/core/presentation/widgets/evoke_tool_card.dart';
+import 'package:photo_editor/core/presentation/widgets/banner_ad_widget.dart';
 import 'package:photo_editor/core/utils/permission_helper.dart';
+import 'package:photo_editor/injection_container.dart';
+import 'package:photo_editor/core/ads/ad_service.dart';
 
-class ConversionToolsScreen extends StatelessWidget {
+class ConversionToolsScreen extends StatefulWidget {
   const ConversionToolsScreen({super.key});
+
+  @override
+  State<ConversionToolsScreen> createState() => _ConversionToolsScreenState();
+}
+
+class _ConversionToolsScreenState extends State<ConversionToolsScreen> {
+  late AdService _adService;
+  late dynamic _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _adService = sl<AdService>();
+    _bannerAd = _adService.loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +156,14 @@ class ConversionToolsScreen extends StatelessWidget {
             ),
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
+          SliverToBoxAdapter(
+            child: _adService.hasBannerAd && _bannerAd != null
+                ? SafeArea(
+                    top: false,
+                    child: BannerAdWidget(bannerAd: _bannerAd),
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );

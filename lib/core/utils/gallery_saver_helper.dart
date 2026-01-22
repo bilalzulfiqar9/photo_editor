@@ -4,6 +4,8 @@ import 'package:photo_editor/core/utils/permission_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
+import 'package:photo_editor/injection_container.dart';
+import 'package:photo_editor/core/ads/ad_service.dart';
 
 class GallerySaverHelper {
   /// Notifier to trigger gallery refresh. Listened to by GalleryScreen.
@@ -36,7 +38,11 @@ class GallerySaverHelper {
       shouldReloadGallery.value++;
     }
 
-    return gallerySuccess || appDocSuccess;
+    final success = gallerySuccess || appDocSuccess;
+    if (success) {
+      sl<AdService>().onSuccessfulSaveOrExport();
+    }
+    return success;
   }
 
   static Future<bool> saveVideo(String filePath, {String? albumName}) async {
@@ -64,7 +70,11 @@ class GallerySaverHelper {
       shouldReloadGallery.value++;
     }
 
-    return gallerySuccess || appDocSuccess;
+    final success = gallerySuccess || appDocSuccess;
+    if (success) {
+      sl<AdService>().onSuccessfulSaveOrExport();
+    }
+    return success;
   }
 
   static Future<void> _copyToAppDocs(

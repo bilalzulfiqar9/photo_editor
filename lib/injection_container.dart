@@ -31,11 +31,13 @@ import 'features/payment/data/datasources/iap_service.dart';
 import 'features/payment/data/repositories/payment_repository_impl.dart';
 import 'features/payment/domain/repositories/payment_repository.dart';
 import 'features/payment/presentation/cubit/payment_cubit.dart';
+import 'core/ads/ad_service.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
+  sl.registerLazySingleton(() => AdService(frequency: 3));
 
   // Features - Payment
   sl.registerFactory(() => PaymentCubit(sl()));
@@ -46,6 +48,7 @@ Future<void> init() async {
     () => IAPService(
       onPurchaseSuccess: (purchaseDetails) {
         sl<PaymentRepository>().setPremiumStatus(true);
+        sl<AdService>().setPremiumStatus(true);
       },
       onPurchaseError: (error) {
         // Optionally handle error or reset status if needed,
@@ -99,4 +102,6 @@ Future<void> init() async {
   sl.registerFactory(() => OverlayCubit(sl()));
   sl.registerLazySingleton(() => SaveOverlayUseCase(sl()));
   sl.registerLazySingleton<OverlayRepository>(() => OverlayRepositoryImpl());
+
+  await sl<AdService>().initialize();
 }
