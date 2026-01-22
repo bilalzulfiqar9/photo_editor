@@ -70,6 +70,7 @@ dependencies:
   printing: ^5.11.0
   in_app_purchase: ^3.2.3
   open_filex: ^4.7.0
+  google_mobile_ads: ^7.0.0
 
 
 dev_dependencies:
